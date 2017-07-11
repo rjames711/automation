@@ -1,5 +1,6 @@
-var socket = require('socket.io-client')('https://automation-rjames711.c9users.io/');
+var socket = require('socket.io-client')('http://localhost:3000');
 socket.on('connect', function(){});
 socket.on('event', function(data){});
+socket.emit('message', "ima beaglebone");
 socket.on('disconnect', function(){});
-socket.emit('message', "a message");
+console.log("done maybe perhaps?");

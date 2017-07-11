@@ -41,11 +41,12 @@ io.on('connection', function (socket) {
 
       if (!text)
         return;
-
+/*
       socket.get('name', function (err, name) {
         var data = {
           name: name,
           text: text
+*/
         };
 
         broadcast('message', data);
@@ -54,9 +55,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on('identify', function (name) {
-      socket.set('name', String(name || 'Anonymous'), function (err) {
+//Commented since deprecated
+/*      socket.set('name', String(name || 'Anonymous'), function (err) {
         updateRoster();
       });
+*/
+
+   socket.name=name;
     });
   });
 
