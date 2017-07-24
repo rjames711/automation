@@ -36,8 +36,28 @@ function set_speed(cmd){
     //But right now its taken the second part of the command as a speed parameter, 
     //setting the global variable and restarting the interval  
     speed= cmd[1];  
+    io.emit('interval', cmd[1]);
     start_all();
   }
+  else{
+   param_error();
+  }
+}
+
+function param_error(){
+   console.log("Wrong Number of parameters");
+    io.emit('chat message', "SERVER: Wrong Number of parameters" )
+}
+
+function set_count(cmd){
+  if (cmd.length==2){
+    stop_all();
+    count=cmd[1]-1;
+    count_up();
+  }
+  else
+    param_error();
+  
 }
 
 app.get('/', function(req, res){
@@ -66,6 +86,7 @@ io.on('connection', function(socket){
     if(cmd[0]=='start')         start_all();
     else if (cmd[0]=='stop')    stop_all();
     else if (cmd[0]=='speed')   set_speed(cmd);
+    else if (cmd[0]=='count')   set_count(cmd);
     // End custom commands
   });
 

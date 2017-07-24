@@ -16,7 +16,8 @@
   </head>
   <body>
     <h2 id=count>Count: 0 </h2>
-   
+   <h2 id=interval>Interval: 1000 ms </h2>
+   <h3 id=rate_disp> rates </h3>
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
@@ -42,6 +43,18 @@
         */
         socket.on('count', function(cnt){
           count.innerText='Count: ' +cnt;
+        });
+        socket.on('interval', function(interv){
+          interval.innerText='Interval: ' +interv+" ms";
+          var rates = {"per_second":0,"per_minute":0,"per_hour":0, "per_day":0};
+          rates.per_second=1000/interv;
+          rates.per_minute=rates.per_second*60;
+          rates.per_hour=rates.per_minute*60;
+          rates.per_day=rates.per_hour*24;
+
+          var strrate=JSON.stringify(rates);
+          console.log(strrate);
+          rate_disp.innerText=strrate;
         });
          // End custom data handling
         
