@@ -7,6 +7,11 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/doc', function(req, res){
+  res.sendFile(__dirname + '/water dispersion fixture.mht');
+});
+
+
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
