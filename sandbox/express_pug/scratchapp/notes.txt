@@ -1,0 +1,1 @@
+retrying express with pug and socketio without the defaulot layout provided with generator to hopefully simplify thing

@@ -1,0 +1,2 @@
+trying to get a very basic grasp on bootstrap to make application funcitonal on different platformss.
+Right now leaning towards a very basic linear layout of with maybe a top nav bar.

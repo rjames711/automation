@@ -1,0 +1,19 @@
+trying to make a templating engine work
+Apparrently jade is now pug which suck because jade 
+sounds much nicer 
+
+also going to try to use the express generator
+
+Got it working somewhat using tables. 
+Also got bootstrap included which doesn't seem to help much with the table.
+Need to try with normal bootstrap grids and try to get working with pug 
+
+
+Some stuff on using socketio with pug
+https://stackoverflow.com/questions/42146569/im-trying-to-re-render-my-pug-template-through-setinterval-is-this-possible
+
+Ok interesting question is how do you link the socket.io on the client? Do you need to depend on a remote server cdn or can you supply when you serve page. My basic example
+seemed to include the local dependency on the server but use a cdn on the client. Is that standard?
+
+
+Can't figure out how to integrate socket io with default structure laid out in myapp. Restarted from scratch.

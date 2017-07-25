@@ -1,0 +1,36 @@
+extends layout
+
+block scripts
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
+    script(src="https://code.jquery.com/jquery-1.11.1.js")
+    script.
+        console.log('starting script')
+        var socket = io.connect();
+            socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('my other event', { my: 'data' });
+        });
+        socket.on('count', function(cnt){
+          count.innerText='Count: ' +cnt;
+          console.log('recieved message');
+        });
+block content
+  h1= title
+  p Welcome to #{title}
+  h3(id= "count") Count: 0
+  table(class='table-responsive' border='1')
+    thead
+        tr
+            th #
+            th Code
+            th Name
+            th Value
+    tbody
+        each item, i in items
+            tr
+                td= i+1
+                td= item.code
+                td= item.name
+                td= item.description
