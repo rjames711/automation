@@ -1,0 +1,21 @@
+Current thought / plans for project:
+
+Evolving as I go because there's a lot to learn.
+
+Stack:
+Leaning towards express, angular and socket.io at this point.
+Going to try to build from scratch as much as possible because I'm
+having trouble understanding the generated projects
+
+Serverside:
+Has a library of tests programs to choose from (node modules for running tests fixture automation etc.). Once selected, the 
+module will communicated a json object containing all the relevent information about its state (count, outputs on/of, motor position).
+The different field are marked as editiable or not. This object is emitted via socket whenever state changes.
+
+Also will serve up a static page for the test program containing documaention on the program , maybe pictures of related fixtures etc. 
+
+Client side:
+Recieves the state object and renders a table with inputs for the editible fields. When new object is recieved via socket, table is updated. 
+Client sends object back via socket when edited for values to be updated on client side. Table is bound to object values via angular. 
+
+

@@ -2,14 +2,12 @@ doctype html
 html
   head
     title= title
-    //Scripts , stylesheets
+    
     link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
-    link(rel='stylesheet', href='/stylesheets/style.css')
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
     script(src="https://code.jquery.com/jquery-1.11.1.js")
-    //Provides functionality 
     script.
       console.log('starting script')
       var socket = io.connect();
@@ -22,6 +20,7 @@ html
         console.log('recieved message');
       });
     block scripts
-    
+      //script(src="/socket.io/socket.io.js")
+    link(rel='stylesheet', href='/stylesheets/style.css')
   body
     block content

@@ -1,0 +1,2 @@
+following this:
+https://www.npmjs.com/package/generator-express-angular

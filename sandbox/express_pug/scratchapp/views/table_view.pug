@@ -1,0 +1,23 @@
+extends layout
+
+block scripts
+
+block content
+  h1= title
+  div(class='container')
+    p Welcome to #{title}
+    h3(id= "count") Count: 0
+    table(class='table table-striped' border='1' id='table_values')
+        thead
+            tr
+                th #
+                th Code
+                th Name
+                th Value
+        tbody
+            each item, i in items
+                tr
+                    td= i+1
+                    td= item.code
+                    td= item.name
+                    td= item.description
