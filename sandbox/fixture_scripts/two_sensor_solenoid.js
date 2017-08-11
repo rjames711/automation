@@ -6,7 +6,7 @@
 //2,3,4 seem to be pullup by default, 20 seems to be pulldown by default
 //13 and 19 unfortunately seem to be pulldown by default 
 
-console.log('script running');
+console.log('starting');
 
 var fs = require('fs');
 var Gpio = require('onoff').Gpio,
@@ -29,7 +29,7 @@ fs.readFile('count.txt',function(err,data){
        }
     else{
     count=data;    
-    console.log('loaded count' +data);
+    console.log('loaded count ' +data);
     }
  });   
 
@@ -39,12 +39,14 @@ end_stop.watch(turn_off);
 
 //So it seems the frontstop watches the value of its own pin 
 function turn_on(){
+    if (count%1000==0) //stop at 1000 cycle intervals
+        return;
     if (state==0)
     {
         state=1;
         led.writeSync(state);
         count++;
-        console.log(count);
+        process.stdout.write("Running. Count: " +count + "\r");
         fs.writeFile('count.txt', count+'\n');
     }
 }
