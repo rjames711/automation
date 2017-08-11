@@ -7,6 +7,8 @@
 //13 and 19 unfortunately seem to be pulldown by default 
 
 console.log('script running');
+
+var fs = require('fs');
 var Gpio = require('onoff').Gpio,
     led = new Gpio(26, 'out'), //changed these two values
     front_stop = new Gpio(13, 'in', 'both'),
@@ -16,6 +18,21 @@ var Gpio = require('onoff').Gpio,
 led.writeSync(1);
 var state=0;
 var count=0;
+
+fs.readFile('count.txt',function(err,data){
+    if(err){
+        console.log('no count file');
+        return console.log(err);
+         }
+    if(isNaN(data)){
+        console.log("count file isn't a number"); 
+       }
+    else{
+    count=data;    
+    console.log('loaded count' +data);
+    }
+ });   
+
 
 front_stop.watch(turn_on);
 end_stop.watch(turn_off);
@@ -28,6 +45,7 @@ function turn_on(){
         led.writeSync(state);
         count++;
         console.log(count);
+        fs.writeFile('count.txt', count+'\n');
     }
 }
 
