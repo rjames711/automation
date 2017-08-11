@@ -39,15 +39,14 @@ end_stop.watch(turn_off);
 
 //So it seems the frontstop watches the value of its own pin 
 function turn_on(){
-    if (count%1000==0) //stop at 1000 cycle intervals
-        return;
     if (state==0)
-    {
+    {  
         state=1;
-        led.writeSync(state);
         count++;
-        process.stdout.write("Running. Count: " +count + "\r");
-        fs.writeFile('count.txt', count+'\n');
+        fs.writeFile('count.txt', count+'\n'); //save count to file
+        process.stdout.write("Running. Count: " +count + "        \r"); // update count in place
+        if (count%1000!=0) //stop at 1000 cycle intervals
+            led.writeSync(state); //turn output on
     }
 }
 
