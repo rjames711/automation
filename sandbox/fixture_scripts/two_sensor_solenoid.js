@@ -18,6 +18,9 @@ var Gpio = require('onoff').Gpio,
 led.writeSync(1);
 var state=0;
 var count=0;
+var running = true;
+
+fs.watch('run_state.txt',get_run_state);
 
 fs.readFile('count.txt',function(err,data){
     if(err){
@@ -28,7 +31,7 @@ fs.readFile('count.txt',function(err,data){
         console.log("count file isn't a number"); 
        }
     else{
-    count=data;    
+    count=parseInt(data);    
     console.log('loaded count ' +data);
     }
  });   
@@ -45,8 +48,10 @@ function turn_on(){
         count++;
         fs.writeFile('count.txt', count+'\n'); //save count to file
         process.stdout.write("Running. Count: " +count + "        \r"); // update count in place
-        if (count%1000!=0) //stop at 1000 cycle intervals
-            led.writeSync(state); //turn output on
+        if (count%1000==0) //stop at 1000 cycle intervals
+            fs.writeFile('run_state.txt', 0 +'\n'); //write a zero to runstate file to stop running.
+       if (running)
+         led.writeSync(state); //turn output on
     }
 }
 
@@ -62,3 +67,19 @@ process.on('SIGINT', function () {
   front_stop.unexport();
 });
 
+function get_run_state(){
+    fs.readFile('run_state.txt',function(err,data){
+       if(err){
+                console.log('no run_state.txt file');
+                return 0;
+                 }
+    if (parseInt(data)==1){
+        state=0;
+        running = 1;
+        turn_on();
+    }
+    else
+       running =0; 
+});   
+
+}
