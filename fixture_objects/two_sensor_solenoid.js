@@ -19,9 +19,9 @@ function Two_Sensor_Solenoid(){
     this.end_stop = new this.Gpio(19, 'in', 'both');
     
     this.led.writeSync(1);
-    var state=0;
-    var count=0;
-    var running = true;
+    this.state=0;
+    this.count=0;
+    this.running = true;
     this.fs.watch('run_state.txt',this.get_run_state);
     
     this.fs.readFile('count.txt',function(err,data){
@@ -33,7 +33,7 @@ function Two_Sensor_Solenoid(){
         console.log("count file isn't a number"); 
        }
     else{
-    count=parseInt(data);    
+    this.count=parseInt(data);    
     console.log('loaded count ' +data);
     }
  });   
@@ -45,6 +45,8 @@ function Two_Sensor_Solenoid(){
   this.led.unexport();
   this.front_stop.unexport();
 });
+
+
     
 }
 
