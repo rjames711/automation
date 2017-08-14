@@ -1,4 +1,4 @@
-//Tested with fixture dual sensor aircylinder fixture. Works correctly 
+// reworking to make in to reusable object
 "use strict";
 
 //Not sure I completely understand the syntaax here. Is GPIO a list?
@@ -8,21 +8,23 @@
 
 console.log('starting');
 
-var fs = require('fs');
-var Gpio = require('onoff').Gpio,
-    led = new Gpio(26, 'out'), //changed these two values
-    front_stop = new Gpio(13, 'in', 'both'),
-    end_stop = new Gpio(19, 'in', 'both');
 
 
-led.writeSync(1);
-var state=0;
-var count=0;
-var running = true;
 
-fs.watch('run_state.txt',get_run_state);
-
-fs.readFile('count.txt',function(err,data){
+function Two_Sensor_Solenoid(){
+    this.fs = require('fs');
+    this.Gpio = require('onoff').Gpio,
+    this.led = new this.Gpio(26, 'out'), //changed these two values
+    this.front_stop = new this.Gpio(13, 'in', 'both'),
+    this.end_stop = new this.Gpio(19, 'in', 'both');
+    
+    this.led.writeSync(1);
+    var state=0;
+    var count=0;
+    var running = true;
+    this.fs.watch('run_state.txt',this.get_run_state);
+    
+    this.fs.readFile('count.txt',function(err,data){
     if(err){
         console.log('no count file');
         return console.log(err);
@@ -35,51 +37,53 @@ fs.readFile('count.txt',function(err,data){
     console.log('loaded count ' +data);
     }
  });   
+    
+    this.front_stop.watch(this.turn_on);
+    this.end_stop.watch(this.turn_off);
+    
+    process.on('SIGINT', function () {
+  this.led.unexport();
+  this.front_stop.unexport();
+});
+    
+}
 
-
-front_stop.watch(turn_on);
-end_stop.watch(turn_off);
 
 //So it seems the frontstop watches the value of its own pin 
-function turn_on(){
-    if (state==0)
+Two_Sensor_Solenoid.prototype.turn_on = function(){
+    if (this.state==0)
     {  
-        state=1;
-        count++;
-        fs.writeFile('count.txt', count+'\n'); //save count to file
-        process.stdout.write("Running. Count: " +count + "        \r"); // update count in place
-        if (count%1000==0) //stop at 1000 cycle intervals
-            fs.writeFile('run_state.txt', 0 +'\n'); //write a zero to runstate file to stop running.
-       if (running)
-         led.writeSync(state); //turn output on
+        this.state=1;
+        this.count++;
+        this.fs.writeFile('count.txt', this.count+'\n'); //save count to file
+        process.stdout.write("Running. Count: " + this.count + "        \r"); // update count in place
+        if (this.count%1000==0) //stop at 1000 cycle intervals
+            this.fs.writeFile('run_state.txt', 0 +'\n'); //write a zero to runstate file to stop running.
+       if (this.running)
+         this.led.writeSync(this.state); //turn output on
     }
 }
 
-function turn_off(){
-state=0;
-led.writeSync(state);
+Two_Sensor_Solenoid.prototype.turn_off=function(){
+this.state=0;
+this.led.writeSync(this.state);
 }
 
-
-
-process.on('SIGINT', function () {
-  led.unexport();
-  front_stop.unexport();
-});
-
 function get_run_state(){
-    fs.readFile('run_state.txt',function(err,data){
+    this.fs.readFile('run_state.txt',function(err,data){
        if(err){
                 console.log('no run_state.txt file');
                 return 0;
                  }
     if (parseInt(data)==1){
-        state=0;
-        running = 1;
-        turn_on();
+        this.state=0;
+        this.running = 1;
+        this.turn_on();
     }
     else
-       running =0; 
+       this.running =0; 
 });   
 
 }
+
+module.exports=Two_Sensor_Solenoid;
