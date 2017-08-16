@@ -27,35 +27,13 @@ function Two_Sensor_Solenoid() {
     this.fs.watch('run_state.txt', this.get_run_state);
 
     this.count = 55;
-
-   this.set_count=function(count){
-       this.count=count;
-   }
-    
-    this.get_count=function(){return this.count;}
-        
-   
-    
-   
-
     
     this.front_stop.watch(this.turn_on);
     this.end_stop.watch(this.turn_off);
-
-    process.on('SIGINT', function() {
-        this.led.unexport();
-        this.front_stop.unexport();
-    });
-}
-
-
-
-Two_Sensor_Solenoid.prototype.read_count = function() {
-    console.log('in proto: ' + Two_Sensor_Solenoid.count);
-}
+/*******paster in seperator********/
 
 //So it seems the frontstop watches the value of its own pin 
-Two_Sensor_Solenoid.prototype.turn_on = function() {
+this.turn_on = function() {
     if (this.state == 0) {
         this.state = 1;
         this.count++;
@@ -68,26 +46,18 @@ Two_Sensor_Solenoid.prototype.turn_on = function() {
     }
 }
 
-Two_Sensor_Solenoid.prototype.turn_off = function() {
+this.turn_off = function() {
     this.state = 0;
     this.led.writeSync(this.state);
 }
 
-function get_run_state() {
-    this.fs.readFile('run_state.txt', function(err, data) {
-        if (err) {
-            console.log('no run_state.txt file');
-            return 0;
-        }
-        if (parseInt(data) == 1) {
-            this.state = 0;
-            this.running = 1;
-            this.turn_on();
-        }
-        else
-            this.running = 0;
+/*******paster in seperator********/
+    process.on('SIGINT', function() {
+        this.led.unexport();
+        this.front_stop.unexport();
     });
 
 }
+
 
 module.exports = Two_Sensor_Solenoid;
