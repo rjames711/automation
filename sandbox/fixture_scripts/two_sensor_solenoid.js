@@ -46,7 +46,7 @@ function turn_on(){
     {  
         state=1;
         count++;
-        fs.writeFile('count.txt', count+'\n'); //save count to file
+        fs.writeFile('count.txt', count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
         process.stdout.write("Running. Count: " +count + "        \r"); // update count in place
         if (count%1000==0) //stop at 1000 cycle intervals
             fs.writeFile('run_state.txt', 0 +'\n'); //write a zero to runstate file to stop running.

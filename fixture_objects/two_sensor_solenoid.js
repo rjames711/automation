@@ -36,7 +36,7 @@ this.turn_on = function() {
     if (this.state == 0) {
         this.state = 1;
         this.count++;
-        this.fs.writeFile('count.txt', this.count + '\n'); //save count to file
+        fs.writeFile('count.txt', count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
         process.stdout.write("Running. Count: " + this.count + "        \r"); // update count in place
         if (this.count % 1000 == 0) //stop at 1000 cycle intervals
             this.fs.writeFile('run_state.txt', 0 + '\n'); //write a zero to runstate file to stop running.
