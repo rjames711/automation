@@ -12,15 +12,14 @@ console.log('starting');
 
 
 function Two_Sensor_Solenoid() {
-    this.fs = require('fs');
-
-    //this.Gpio = require('onoff').Gpio, 
-    this.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
+        this.fs=require('fs');
+        this.Gpio = require('onoff').Gpio, 
+//    this.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
         this.led = new this.Gpio(26, 'out'), //changed these two values
         this.front_stop = new this.Gpio(13, 'in', 'both'),
         this.end_stop = new this.Gpio(19, 'in', 'both');
     this.led.writeSync(1);
-
+    console.log(this.led);
     this.state = 0;
     this.count = 0;
     this.running = true;
@@ -46,9 +45,10 @@ this.turn_on = function() {
     }
 }
 
-this.turn_off = function() {
-    this.state = 0;
-    this.led.writeSync(this.state);
+this.turn_off = function(led, state) {
+    state = 0;
+    console.log(led)
+    led.writeSync(state);
 }
 
 /*******paster in seperator********/

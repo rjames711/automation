@@ -19,4 +19,11 @@ function get_file_data(){
 get_file_data();
 /****End Method for reading count. Don't mess with unless you mean to ****/
 
+setTimeout(function(){ console.log( 'count in object:', mach.count)}, 100);
 
+//setTimeout(function(){mach.led.writeSync(0)},2000);// this works.
+
+//setTimeout(mach.turn_off,3000);// this throws error and doesn't work.
+
+
+setTimeout(mach.turn_off,3000);// this throws error and doesn't work.
