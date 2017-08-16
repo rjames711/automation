@@ -11,81 +11,83 @@ console.log('starting');
 
 
 
-function Two_Sensor_Solenoid(){
+function Two_Sensor_Solenoid() {
     this.fs = require('fs');
-    this.Gpio = require('onoff').Gpio,
-    this.led = new this.Gpio(26, 'out'), //changed these two values
-    this.front_stop = new this.Gpio(13, 'in', 'both'),
-    this.end_stop = new this.Gpio(19, 'in', 'both');
-    
+
+    //this.Gpio = require('onoff').Gpio, 
+    this.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
+        this.led = new this.Gpio(26, 'out'), //changed these two values
+        this.front_stop = new this.Gpio(13, 'in', 'both'),
+        this.end_stop = new this.Gpio(19, 'in', 'both');
     this.led.writeSync(1);
-    this.state=0;
-    this.count=0;
+
+    this.state = 0;
+    this.count = 0;
     this.running = true;
-    this.fs.watch('run_state.txt',this.get_run_state);
+    this.fs.watch('run_state.txt', this.get_run_state);
+
+    this.count = 55;
+
+   this.set_count=function(count){
+       this.count=count;
+   }
     
-    this.fs.readFile('count.txt',function(err,data){
-    if(err){
-        console.log('no count file');
-        return console.log(err);
-         }
-    if(isNaN(data)){
-        console.log("count file isn't a number"); 
-       }
-    else{
-    this.count=parseInt(data);    
-    console.log('loaded count ' +data);
-    }
- });   
+    this.get_count=function(){return this.count;}
+        
+   
+    
+   
+
     
     this.front_stop.watch(this.turn_on);
     this.end_stop.watch(this.turn_off);
-    
-    process.on('SIGINT', function () {
-  this.led.unexport();
-  this.front_stop.unexport();
-});
 
-
-    
+    process.on('SIGINT', function() {
+        this.led.unexport();
+        this.front_stop.unexport();
+    });
 }
 
+
+
+Two_Sensor_Solenoid.prototype.read_count = function() {
+    console.log('in proto: ' + Two_Sensor_Solenoid.count);
+}
 
 //So it seems the frontstop watches the value of its own pin 
-Two_Sensor_Solenoid.prototype.turn_on = function(){
-    if (this.state==0)
-    {  
-        this.state=1;
+Two_Sensor_Solenoid.prototype.turn_on = function() {
+    if (this.state == 0) {
+        this.state = 1;
         this.count++;
-        this.fs.writeFile('count.txt', this.count+'\n'); //save count to file
+        this.fs.writeFile('count.txt', this.count + '\n'); //save count to file
         process.stdout.write("Running. Count: " + this.count + "        \r"); // update count in place
-        if (this.count%1000==0) //stop at 1000 cycle intervals
-            this.fs.writeFile('run_state.txt', 0 +'\n'); //write a zero to runstate file to stop running.
-       if (this.running)
-         this.led.writeSync(this.state); //turn output on
+        if (this.count % 1000 == 0) //stop at 1000 cycle intervals
+            this.fs.writeFile('run_state.txt', 0 + '\n'); //write a zero to runstate file to stop running.
+        if (this.running)
+            this.led.writeSync(this.state); //turn output on
     }
 }
 
-Two_Sensor_Solenoid.prototype.turn_off=function(){
-this.state=0;
-this.led.writeSync(this.state);
+Two_Sensor_Solenoid.prototype.turn_off = function() {
+    this.state = 0;
+    this.led.writeSync(this.state);
 }
 
-function get_run_state(){
-    this.fs.readFile('run_state.txt',function(err,data){
-       if(err){
-                console.log('no run_state.txt file');
-                return 0;
-                 }
-    if (parseInt(data)==1){
-        this.state=0;
-        this.running = 1;
-        this.turn_on();
-    }
-    else
-       this.running =0; 
-});   
+function get_run_state() {
+    this.fs.readFile('run_state.txt', function(err, data) {
+        if (err) {
+            console.log('no run_state.txt file');
+            return 0;
+        }
+        if (parseInt(data) == 1) {
+            this.state = 0;
+            this.running = 1;
+            this.turn_on();
+        }
+        else
+            this.running = 0;
+    });
 
 }
 
-module.exports=Two_Sensor_Solenoid;
+module.exports = Two_Sensor_Solenoid;
