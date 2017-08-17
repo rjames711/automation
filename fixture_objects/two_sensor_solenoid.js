@@ -13,51 +13,52 @@ console.log('starting');
 
 function Two_Sensor_Solenoid() {
         var self = this;
-        this.fs=require('fs');
-        this.Gpio = require('onoff').Gpio, 
-//    this.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
-        this.led = new this.Gpio(26, 'out'), //changed these two values
-        this.front_stop = new this.Gpio(13, 'in', 'both'),
-        this.end_stop = new this.Gpio(19, 'in', 'both');
-    this.led.writeSync(1);
-    console.log(this.led);
-    this.state = 0;
-    this.count = 0;
-    this.running = true;
-    this.fs.watch('run_state.txt', this.get_run_state);
+        self.fs=require('fs');
+    //    self.Gpio = require('onoff').Gpio, 
+        self.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
+        self.led = new self.Gpio(26, 'out'), //changed these two values
+        self.front_stop = new self.Gpio(13, 'in', 'both'),
+        self.end_stop = new self.Gpio(19, 'in', 'both');
+    self.led.writeSync(1);
+    self.state = 0;
+    self.count = 0;
+    self.running = true;
+    self.fs.watch('run_state.txt', self.get_run_state);
 
-    this.count = 55;
+    self.count = 55;
     
-    this.front_stop.watch(this.turn_on);
-    this.end_stop.watch(this.turn_off);
+    self.front_stop.watch(self.turn_on);
+    self.end_stop.watch(self.turn_off);
 /*******paster in seperator********/
 
 //So it seems the frontstop watches the value of its own pin 
-this.turn_on = function() {
-    if (this.state == 0) {
-        this.state = 1;
-        this.count++;
+self.turn_on = function() {
+    if (self.state == 0) {
+        self.state = 1;
+        self.count++;
         fs.writeFile('count.txt', count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
-        process.stdout.write("Running. Count: " + this.count + "        \r"); // update count in place
-        if (this.count % 1000 == 0) //stop at 1000 cycle intervals
-            this.fs.writeFile('run_state.txt', 0 + '\n'); //write a zero to runstate file to stop running.
-        if (this.running)
-            this.led.writeSync(this.state); //turn output on
+        process.stdout.write("Running. Count: " + self.count + "        \r"); // update count in place
+        if (self.count % 1000 == 0) //stop at 1000 cycle intervals
+            self.fs.writeFile('run_state.txt', 0 + '\n'); //write a zero to runstate file to stop running.
+        if (self.running)
+            self.led.writeSync(self.state); //turn output on
     }
 }
 
-this.turn_off = function(led, state) {
+self.turn_off = function(led, state) {
     state = 0;
+    /* debugging log
     console.log('led in turnoff', led);
-    console.log('this in turn off', this);
     console.log('self in turn off', self);
+    console.log('self in turn off', self);
+    */
     self.led.writeSync(state);
 }
 
 /*******paster in seperator********/
     process.on('SIGINT', function() {
-        this.led.unexport();
-        this.front_stop.unexport();
+        self.led.unexport();
+        self.front_stop.unexport();
     });
 
 }
