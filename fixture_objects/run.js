@@ -23,7 +23,7 @@ setTimeout(function(){ console.log( 'count in object:', mach.count)}, 100);
 
 //setTimeout(function(){mach.led.writeSync(0)},2000);// this works.
 
-//setTimeout(mach.turn_off,3000);// this throws error and doesn't work.
-
-
 setTimeout(mach.turn_off,3000);// this throws error and doesn't work.
+
+
+

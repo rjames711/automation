@@ -56,10 +56,16 @@ self.turn_off = function(led, state) {
 }
 
 /*******paster in seperator********/
+
+/* Commmenting this function out. Using "this" the unexports don't work as they don't apear to refer to anything.
+    Using 'self' the program hangs and won't quit. need to revisit this. 
+
     process.on('SIGINT', function() {
-        self.led.unexport();
-        self.front_stop.unexport();
+        this.led.unexport();
+        this.front_stop.unexport();
     });
+*/
+
 
 }
 
