@@ -48,7 +48,7 @@ this.turn_off = function(led, state) {
 //    console.log('led in turnoff', self.led);
 //    console.log('self in turn off', self);
 //    console.log('this in turn off', this);
-    self.led.writeSync(state);
+    self.led.writeSync(self.state);
 }
    
     self.front_stop.watch(self.turn_on);
