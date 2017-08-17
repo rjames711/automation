@@ -14,8 +14,8 @@ console.log('starting');
 function Two_Sensor_Solenoid() {
         var self = this;
         self.fs=require('fs');
-    //    self.Gpio = require('onoff').Gpio, 
-        self.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
+        self.Gpio = require('onoff').Gpio, 
+        //self.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
         self.led = new self.Gpio(26, 'out'), //changed these two values
         self.front_stop = new self.Gpio(13, 'in', 'both'),
         self.end_stop = new self.Gpio(19, 'in', 'both');
@@ -26,17 +26,15 @@ function Two_Sensor_Solenoid() {
     self.fs.watch('run_state.txt', self.get_run_state);
 
     self.count = 55;
-    
-    self.front_stop.watch(self.turn_on);
-    self.end_stop.watch(self.turn_off);
-/*******paster in seperator********/
-
+ /*******paster in seperator********/
+//console.log('this',this);
+//console.log('self',self);
 //So it seems the frontstop watches the value of its own pin 
 self.turn_on = function() {
     if (self.state == 0) {
         self.state = 1;
         self.count++;
-        fs.writeFile('count.txt', count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
+        self.fs.writeFile('count.txt', self.count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
         process.stdout.write("Running. Count: " + self.count + "        \r"); // update count in place
         if (self.count % 1000 == 0) //stop at 1000 cycle intervals
             self.fs.writeFile('run_state.txt', 0 + '\n'); //write a zero to runstate file to stop running.
@@ -45,17 +43,18 @@ self.turn_on = function() {
     }
 }
 
-self.turn_off = function(led, state) {
-    state = 0;
-    /* debugging log
-    console.log('led in turnoff', led);
-    console.log('self in turn off', self);
-    console.log('self in turn off', self);
-    */
+this.turn_off = function(led, state) {
+    self.state = 0;
+//    console.log('led in turnoff', self.led);
+//    console.log('self in turn off', self);
+//    console.log('this in turn off', this);
     self.led.writeSync(state);
 }
+   
+    self.front_stop.watch(self.turn_on);
+    self.end_stop.watch(self.turn_off);
 
-/*******paster in seperator********/
+/**self.*****paster in seperator********/
 
 /* Commmenting this function out. Using "this" the unexports don't work as they don't apear to refer to anything.
     Using 'self' the program hangs and won't quit. need to revisit this. 
@@ -68,6 +67,5 @@ self.turn_off = function(led, state) {
 
 
 }
-
 
 module.exports = Two_Sensor_Solenoid;
