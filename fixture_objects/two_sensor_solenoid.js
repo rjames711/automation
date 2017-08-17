@@ -12,6 +12,7 @@ console.log('starting');
 
 
 function Two_Sensor_Solenoid() {
+        var self = this;
         this.fs=require('fs');
         this.Gpio = require('onoff').Gpio, 
 //    this.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
@@ -47,8 +48,10 @@ this.turn_on = function() {
 
 this.turn_off = function(led, state) {
     state = 0;
-    console.log(led)
-    led.writeSync(state);
+    console.log('led in turnoff', led);
+    console.log('this in turn off', this);
+    console.log('self in turn off', self);
+    self.led.writeSync(state);
 }
 
 /*******paster in seperator********/
