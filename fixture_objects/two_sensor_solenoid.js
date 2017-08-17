@@ -23,7 +23,7 @@ function Two_Sensor_Solenoid() {
     self.state = 0;
     self.count = 0;
     self.running = true;
-    self.fs.watch('run_state.txt', self.get_run_state);
+    self.fs.watch( __dirname + '/run_state.txt', self.get_run_state);
 
     self.count = 55;
  /*******paster in seperator********/
@@ -34,15 +34,15 @@ self.turn_on = function() {
     if (self.state == 0) {
         self.state = 1;
         self.count++;
-        self.fs.writeFile('count.txt', self.count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
+        self.fs.writeFile( __dirname + '/count.txt', self.count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
         process.stdout.write("Running. Count: " + self.count + "        \r"); // update count in place
         if (self.count % 1000 == 0) //stop at 1000 cycle intervals
-            self.fs.writeFile('run_state.txt', 0 + '\n'); //write a zero to runstate file to stop running.
+            self.fs.writeFile( __dirname + '/run_state.txt', 0 + '\n'); //write a zero to runstate file to stop running.
         if (self.running)
             self.led.writeSync(self.state); //turn output on
     }
 }
-
+      
 this.turn_off = function(led, state) {
     self.state = 0;
 //    console.log('led in turnoff', self.led);
