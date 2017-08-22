@@ -13,9 +13,10 @@ console.log('starting');
 
 function Two_Sensor_Solenoid() {
         var self = this;
+        self.name='Two_Sensor_Solenoid'
         self.fs=require('fs');
-        self.Gpio = require('onoff').Gpio, 
-        //self.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
+        //self.Gpio = require('onoff').Gpio, 
+        self.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
         self.led = new self.Gpio(26, 'out'), //changed these two values
         self.front_stop = new self.Gpio(13, 'in', 'both'),
         self.end_stop = new self.Gpio(19, 'in', 'both');
@@ -27,6 +28,11 @@ function Two_Sensor_Solenoid() {
 
     self.count = 55;
  /*******paster in seperator********/
+ 
+ self.notify = function(){
+ }//trying an experiment here to see if I can redifine this in the importing module but still have it call from here.
+
+ 
 //console.log('this',this);
 //console.log('self',self);
 //So it seems the frontstop watches the value of its own pin 
@@ -34,6 +40,7 @@ self.turn_on = function() {
     if (self.state == 0) {
         self.state = 1;
         self.count++;
+        self.notify(); // experiment. See funciton comment.
         self.fs.writeFile( __dirname + '/count.txt', self.count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
         process.stdout.write("Running. Count: " + self.count + "        \r"); // update count in place
         if (self.count % 1000 == 0) //stop at 1000 cycle intervals
@@ -42,6 +49,8 @@ self.turn_on = function() {
             self.led.writeSync(self.state); //turn output on
     }
 }
+
+
       
 this.turn_off = function(led, state) {
     self.state = 0;

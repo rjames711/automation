@@ -5,6 +5,15 @@ var port = process.env.PORT || 3000;
 var count=0;
 var speed=1000;
 var run_state=0;
+const fixture = require('../fixture_objects/two_sensor_solenoid.js')
+var mach= new fixture();
+console.log('importing fixture object: ', mach.name);
+
+mach.notify = function(){
+  count= mach.count;
+  count_up();
+}
+
 
 function start_all(){
 if(run_state == 0){
