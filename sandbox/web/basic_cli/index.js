@@ -12,7 +12,7 @@ if(run_state == 0){
 }
 else{
   console.log("Interval already set");
-  io.emit('command', "SERVER: Interval already set");
+  io.emit('chat message', "SERVER: Interval already set");
 }
 
 console.log(run_state._called);
@@ -29,11 +29,24 @@ function stop_all(){
   run_state=0;
 }
 
-
+function set_speed(cmd){
+  if (cmd.length==2){
+    stop_all();
+    // probably horrible contemptable loathsome usage of globals for which I'll go promptly to hell need to find how to structure this stuff in js
+    //But right now its taken the second part of the command as a speed parameter, 
+    //setting the global variable and restarting the interval  
+    speed= cmd[1];  
+    io.emit('interval', cmd[1]);
+    start_all();
+  }
+  else{
+   param_error();
+  }
+}
 
 function param_error(){
    console.log("Wrong Number of parameters");
-    io.emit('command', "SERVER: Wrong Number of parameters" )
+    io.emit('chat message', "SERVER: Wrong Number of parameters" )
 }
 
 function set_count(cmd){
@@ -47,7 +60,6 @@ function set_count(cmd){
   
 }
 
-
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -58,10 +70,10 @@ app.get('/doc', function(req, res){
 
 
 io.on('connection', function(socket){
-  socket.on('command', function(msg){
-    io.emit('command', msg);
+  socket.on('chat message', function(msg){
+    io.emit('chat message', msg);
     /*
-    Custom Commands recieved as command here
+    Custom Commands recieved as chat message here
     TODO implement this maybe with a dictionary / hashmap structure
     with structure commands = { command : function } and just do single check
     if the command is in the map and if so call the accompannying function else move on
@@ -73,6 +85,7 @@ io.on('connection', function(socket){
     console.log(cmd[1]);
     if(cmd[0]=='start')         start_all();
     else if (cmd[0]=='stop')    stop_all();
+    else if (cmd[0]=='speed')   set_speed(cmd);
     else if (cmd[0]=='count')   set_count(cmd);
     // End custom commands
   });
