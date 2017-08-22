@@ -2,19 +2,19 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
-var count=0;
 var speed=1000;
 var run_state=0;
 var fs =require('fs');
 const fixture = require('../fixture_objects/two_sensor_solenoid.js')
 var mach= new fixture();
-console.log('importing fixture object: ', mach.name);
+console.log('mach path', mach.path);
+
 
 /**** Method for reading count. Don't mess with unless you mean to ****/
 function get_file_data(){    
     function set_count(count) {mach.count=count} //Sets the count in the created object.
     function read_count (callback){
-        fs.readFile( __dirname + '/count.txt', 'utf8' ,function(err,data){
+        fs.readFile( mach.path + '/count.txt', 'utf8' ,function(err,data){
             if(err){throw err}
             callback(data)
             });}
@@ -23,7 +23,6 @@ function get_file_data(){
 get_file_data();
 /****End Method for reading count. Don't mess with unless you mean to ****/
 
-
 mach.notify = function(){
   count= mach.count;
   count_up();
@@ -31,16 +30,9 @@ mach.notify = function(){
 
 
 function start_all(){
-if(run_state == 0){
-  run_state = setInterval(count_up,speed);
-}
-else{
-  console.log("Interval already set");
-  io.emit('command', "SERVER: Interval already set");
+    mach.restart();
 }
 
-console.log(run_state._called);
-}
 
 function count_up(){
   count++;
@@ -48,9 +40,7 @@ function count_up(){
 }
 
 function stop_all(){
-  clearInterval(run_state);
-  console.log(run_state._called);
-  run_state=0;
+    mach.shut_off();
 }
 
 
@@ -73,7 +63,8 @@ function set_count(cmd){
 
 
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
+    io.emit('count', mach.count);
 });
 
 app.get('/doc', function(req, res){
