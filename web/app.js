@@ -5,7 +5,7 @@ var port = process.env.PORT || 3000;
 var speed=1000;
 var run_state=0;
 var fs =require('fs');
-const fixture = require('../fixture_objects/two_sensor_solenoid.js')
+const fixture = require('../objects/two_sensor_solenoid.js')
 var mach= new fixture();
 console.log('mach path', mach.path);
 
