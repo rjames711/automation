@@ -1,3 +1,6 @@
+//A dummy file run code which uses onoff library on a computer without the actual gpio hardware. Can be deleted if better solution is implemented
+
+
 "use strict";
 
 var fs = require('fs')
