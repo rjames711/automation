@@ -29,7 +29,14 @@ function Two_Sensor_Solenoid() {
     //the watch funciton below does not seem to be working in this module
     self.fs.watch(self.path + '/run_state.txt', self.get_run_state);
 
-    self.notify = function() {} //trying an experiment here to see if I can redifine this in the importing module but still have it call from here.
+/**
+ * Did this as an experiment and it worked first try. Purpose is have a function which can notify in 
+ * some other code where this objects is imported of an event in this object. I think what made this difficult
+ * as compared to other langueges is the weird asynchrounous patterns in js. Anyway the function is redifined in the
+ * code where this object is imported and when it is called here it runs the redefined code. Not sure its the best design pattern
+ * may want to look into other options such as eventEmitter, observer etc.
+*/
+    self.notify = function() {}
 
 
     self.turn_on = function() {
