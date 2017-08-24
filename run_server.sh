@@ -1,1 +1,1 @@
-node /home/pi/automation/web/app.js
+node $PWD/web/app.js

@@ -8,7 +8,15 @@ function Two_Sensor_Solenoid() {
     self.path = __dirname;
     self.name = 'Two_Sensor_Solenoid'
     self.fs = require('fs');
-    self.Gpio = require('onoff').Gpio,
+    if (self.fs.existsSync('/sys/class/gpio')) {
+        console.log('using real onoff module')
+        var gpio_module = 'onoff';
+    }
+    else{
+        console.log('using fake onoff module')
+        var gpio_module = './onoff';
+    }
+    self.Gpio = require(gpio_module).Gpio,
         //self.Gpio = require('./onoff').Gpio, //for using dummy onoff file while testing on cloud9
         self.led = new self.Gpio(26, 'out'), //changed these two values
         self.front_stop = new self.Gpio(13, 'in', 'both'),
