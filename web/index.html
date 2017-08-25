@@ -6,6 +6,7 @@
   <body>
   <h2 id=count>Count: 0 </h2>
 <button type="button" onclick='stop_start()'>STOP / START</button>
+ <p id="pText">data beito</p>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
@@ -15,6 +16,10 @@
         
         socket.on('count', function(cnt){
         count.innerText='Count: ' +cnt;
+        });
+        
+        socket.on('data', function(data){
+        pText.innerText='data: ' +data;
         });
         
         function stop_start(){

@@ -5,6 +5,7 @@ var port = process.env.PORT || 3000;
 var speed=1000;
 var run_state=0;
 var fs =require('fs');
+var count =0;
 const fixture = require('../objects/two_sensor_solenoid.js')
 var mach= new fixture();
 console.log('mach path', mach.path);
@@ -26,11 +27,6 @@ get_file_data();
 mach.notify = function(){
   count= mach.count;
   count_up();
-  console.log('forwarded info', Object.keys(mach).length);
-  var i=1;
-  for(var key in mach){
-    console.log(i++, ' member', key, Object.keys(key).length);
-  }
 }
 
 
@@ -40,8 +36,11 @@ function start_all(){
 
 
 function count_up(){
+  console.log('in count up');
+  console.log(JSON.stringify(mach));
   count++;
   io.emit('count',count);
+  io.emit('data' ,JSON.stringify(mach));
 }
 
 function stop_all(){
