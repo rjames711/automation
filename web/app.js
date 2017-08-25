@@ -8,7 +8,7 @@ var fs =require('fs');
 const fixture = require('../objects/two_sensor_solenoid.js')
 var mach= new fixture();
 console.log('mach path', mach.path);
-
+console.log('forwarded info', mach.forwarded_info);
 
 /**** Method for reading count. Don't mess with unless you mean to ****/
 function get_file_data(){    
@@ -26,6 +26,11 @@ get_file_data();
 mach.notify = function(){
   count= mach.count;
   count_up();
+  console.log('forwarded info', Object.keys(mach).length);
+  var i=1;
+  for(var key in mach){
+    console.log(i++, ' member', key, Object.keys(key).length);
+  }
 }
 
 
