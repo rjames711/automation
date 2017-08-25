@@ -21,12 +21,10 @@ function Two_Sensor_Solenoid() {
         console.log('shutting down fixture');
         //normally would just write a 0 to run_state.txt but fs.watch doesn't seem to work here
         fs.writeFile(self.path + '/run_state.txt', 0 + '\n', function(err) { if (err) throw err; }); //write a zero to runstate file to stop running.
-        get_run_state(); //should be able delete if fs.watch is work which it seem to again
     }
 
     self.restart = function() {
         fs.writeFile(self.path + '/run_state.txt', 1 + '\n', function(err) { if (err) throw err; }); //write a zero to runstate file to stop running.
-        get_run_state(); //should be able delete if fs.watch is work which it seem to again
     }
 
 
@@ -92,7 +90,7 @@ function Two_Sensor_Solenoid() {
             self.state = 1;
             console.log('in turn on ', self.count);
             self.count++;
-            self.update_notify();
+            self.notify();
             fs.writeFile(self.path + '/count.txt', self.count + '\n', function(err) { if (err) throw err; }); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
             process.stdout.write("Running. Count: " + self.count + "        \r"); // update count in place
             if (self.count % 1000 == 0) //stop at 1000 cycle intervals
