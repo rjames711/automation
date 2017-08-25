@@ -7,12 +7,46 @@ console.log('starting');
 
 function Two_Sensor_Solenoid() {
     var self = this;
-    self.path = __dirname;
+    
+/**
+* Begin Private Variables
+*/
     self.name = 'Two_Sensor_Solenoid'
     self.state = 0;
     self.count = 0;
     self.running = true;
-    var fs = require('fs');
+    self.path = __dirname;
+    
+    var turn_off = function() {
+        self.state = 0;
+        output.writeSync(self.state);
+    }
+
+
+    var get_run_state = function() {
+        console.log('in get runstate');
+        fs.readFile(self.path + '/run_state.txt', function(err, data) {
+            if (err) {
+                console.log('no run_state.txt file');
+                return 0;
+            }
+            if (parseInt(data) == 1) {
+                self.state = 0;
+                self.running = 1;
+                turn_on();
+            }
+            else {
+                self.running = 0;
+                output.writeSync(0); //turn output on
+            }
+        });
+    }
+
+/**
+ * Begin public attributes
+*/
+
+var fs = require('fs');
     
     if (fs.existsSync('/sys/class/gpio')) { //Check if gpio are accessible on platform
         console.log('using real onoff module')
@@ -22,12 +56,13 @@ function Two_Sensor_Solenoid() {
         console.log('using fake onoff module')
         var gpio_module = './onoff';
     }
-    self.Gpio = require(gpio_module).Gpio,
-        self.output = new self.Gpio(26, 'out'), //changed these two values
-        self.front_stop = new self.Gpio(13, 'in', 'both'),
-        self.end_stop = new self.Gpio(19, 'in', 'both');
+    
+    var Gpio = require(gpio_module).Gpio,
+        output = new Gpio(26, 'out'), //changed these two values
+        front_stop = new Gpio(13, 'in', 'both'),
+        end_stop = new Gpio(19, 'in', 'both');
 
-    self.turn_on = function() {
+    var turn_on = function() {
         if (self.state == 0) {
             self.state = 1;
             console.log('in turn on ', self.count );
@@ -38,7 +73,7 @@ function Two_Sensor_Solenoid() {
             if (self.count % 1000 == 0) //stop at 1000 cycle intervals
                 self.shut_off();
             if (self.running)
-                self.output.writeSync(self.state); //turn output on
+                output.writeSync(self.state); //turn output on
         }
     }
 
@@ -46,61 +81,15 @@ function Two_Sensor_Solenoid() {
         console.log('shutting down fixture');
         //normally would just write a 0 to run_state.txt but fs.watch doesn't seem to work here
         fs.writeFile(self.path + '/run_state.txt', 0 + '\n', function(err) { if (err) throw err; }); //write a zero to runstate file to stop running.
-        self.get_run_state();
+        get_run_state(); //should be able delete if fs.watch is work which it seem to again
     }
 
     this.restart = function() {
         fs.writeFile(self.path + '/run_state.txt', 1 + '\n', function(err) { if (err) throw err; }); //write a zero to runstate file to stop running.
-        self.get_run_state();
-    }
-
-    this.turn_off = function(output, state) {
-        self.state = 0;
-        self.output.writeSync(self.state);
+        get_run_state(); //should be able delete if fs.watch is work which it seem to again
     }
 
 
-    self.get_run_state = function() {
-        console.log('in get runstate');
-        fs.readFile(self.path + '/run_state.txt', function(err, data) {
-            if (err) {
-                console.log('no run_state.txt file');
-                return 0;
-            }
-            if (parseInt(data) == 1) {
-                self.state = 0;
-                self.running = 1;
-                self.turn_on();
-            }
-            else {
-                self.running = 0;
-                self.output.writeSync(0); //turn output on
-            }
-        });
-    }
-
-/**
- *Following object and associated method contain an object with info to pass along to web browser
- * Probably more clever way of doing this.
-*/
-    self.forwarded_info ={
-        //control
-        shut_off:       {},
-        //static properties
-        name:           { value: self.name, type: 'name'},
-        //updatable properties (probably clever way to update in line somehow)
-        running :       { value: self.running ,  type : 'toggle'},
-        count :         { value: self.count , type : 'setnum' },
-        actuator_state: { value: self.state  , type : 'show'}
-        
-    };
-    
-    self.update_notify = function(){
-        self.forwarded_info.running=self.running;
-        self.forwarded_info.count=self.count;
-        self.forwarded_info.actuator_state=self.state;
-        self.notify(); // experiment. See function comment.
-    }
 /**
  * Did this as an experiment and it worked first try. Purpose is have a function which can notify in 
  * some other code where this objects is imported of an event in this object. I think what made this difficult
@@ -113,9 +102,9 @@ function Two_Sensor_Solenoid() {
 
      
     //the watch funciton below does not seem to be working in this module. May want totry changing fs to var.fs
-    fs.watch(self.path + '/run_state.txt', self.get_run_state);
-    self.front_stop.watch(self.turn_on);
-    self.end_stop.watch(self.turn_off);
+    fs.watch(self.path + '/run_state.txt', get_run_state);
+    front_stop.watch(turn_on);
+    end_stop.watch(turn_off);
 //note removed the unexport function since not being used. 
 }
 
