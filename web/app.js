@@ -26,7 +26,8 @@ get_file_data();
 
 mach.notify = function(){
   count= mach.count;
-  count_up();
+  io.emit('count',count);
+  io.emit('data' ,JSON.stringify(mach));
 }
 
 
@@ -34,14 +35,6 @@ function start_all(){
     mach.restart();
 }
 
-
-function count_up(){
-  console.log('in count up');
-  console.log(JSON.stringify(mach));
-  count++;
-  io.emit('count',count);
-  io.emit('data' ,JSON.stringify(mach));
-}
 
 function stop_all(){
     mach.shut_off();

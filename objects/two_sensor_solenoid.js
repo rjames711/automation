@@ -20,10 +20,12 @@ function Two_Sensor_Solenoid() {
     self.shut_off = function() {
         console.log('shutting down fixture');
         fs.writeFile(self.path + '/run_state.txt', 0 + '\n', function(err) { if (err) throw err; }); //write a zero to runstate file to stop running.
+        self.notify();
     }
 
     self.restart = function() {
         fs.writeFile(self.path + '/run_state.txt', 1 + '\n', function(err) { if (err) throw err; }); //write a zero to runstate file to stop running.
+        self.notify();
     }
 
 
@@ -46,6 +48,7 @@ function Two_Sensor_Solenoid() {
     var turn_off = function() {
         self.state = 0;
         output.writeSync(self.state);
+        self.notify();
     }
 
 
@@ -59,10 +62,12 @@ function Two_Sensor_Solenoid() {
                 self.state = 0;
                 self.running = 1;
                 turn_on();
+                self.notify();
             }
             else {
                 self.running = 0;
                 output.writeSync(0); //turn output on
+                self.notify();
             }
         });
     }
@@ -95,6 +100,7 @@ function Two_Sensor_Solenoid() {
             if (self.running)
                 output.writeSync(self.state); //turn output on
         }
+        self.notify();
     }
 
 
