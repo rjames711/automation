@@ -5,8 +5,8 @@
   </head>
   <body>
   <h2 id=count>Count: 0 </h2>
-<button type="button" onclick='stop_start()'>STOP / START</button>
- <p id="pText">data beito</p>
+<button type="button" id=start_btn onclick='stop_start()'>START</button>
+ <p id="pText">data </p>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
@@ -27,11 +27,14 @@
           if(running){
              socket.emit('command', 'stop');
              running =false;
+             document.getElementById("start_btn").innerText = "START";
           }
           else{
             socket.emit('command' , 'start');
             running = true;
+            document.getElementById("start_btn").innerText = "STOP";
           }
+          
         }
        
         

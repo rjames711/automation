@@ -1,1 +1,21 @@
-very simple button based control page using socket and express
+from: 
+https://stackoverflow.com/questions/25260333/generate-a-html-tag-from-a-json-with-angular
+
+angular.forEach(scope.elements, function(value, key) {
+    // create an element based on its type
+    var newElement = document.createElement(value.type);
+    // add the content
+    newElement.innerHTML = value.content;
+
+    for (attribute in value) {
+        if (attribute != 'type' && attribute != 'content') {
+            //apply attribute
+            newElement.setAttribute(attribute, value[attribute]);
+        }
+    }
+    element.append(newElement);
+});
+
+look useful. other good stuff on this page too.
+
+Also could skip angular and just use: https://www.w3schools.com/jsref/met_document_createelement.asp
