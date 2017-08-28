@@ -19,3 +19,7 @@ angular.forEach(scope.elements, function(value, key) {
 look useful. other good stuff on this page too.
 
 Also could skip angular and just use: https://www.w3schools.com/jsref/met_document_createelement.asp
+
+
+Interesting stuff here. could also skip socket io and use straight websockets with angular.
+https://stackoverflow.com/questions/26299403/angularjs-and-websockets-beyond

@@ -58,16 +58,24 @@ function set_count(cmd){
   
 }
 
-
+//ROUTES
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
     io.emit('count', mach.count);
 });
 
+app.get('/ng', function (req, res) {
+  res.sendFile(__dirname + '/ng.html')
+});
+
+app.get('/js', function (req, res) {
+  res.sendFile(__dirname + '/js.html')
+});
+
 app.get('/doc', function(req, res){
   res.sendFile(__dirname + '/water dispersion fixture.mht');
 });
-
+//END ROUTES
 
 io.on('connection', function(socket){
   socket.on('command', function(msg){

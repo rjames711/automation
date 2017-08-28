@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the button to make a BUTTON element with text.</p>
+
+<button onclick="myFunction(this.id)" id='original'>Try it</button>
+
+<script>
+var count =1;
+
+function myFunction(id) {
+    var btn = document.createElement("BUTTON");
+    var t = document.createTextNode("CLICK ME");
+    btn.setAttribute('id', count++);
+    btn.setAttribute("onclick", "myFunction(this.id)");
+    console.log(count);
+    btn.appendChild(t);
+    console.log(id);
+    if(id=='original'){
+        document.body.appendChild(document.createElement("br"));
+        document.body.appendChild(btn);
+    }
+    else{
+        var this_btn = document.getElementById(id);    // should probably try just passing in this
+        this_btn.insertBefore(btn, this_btn);  // Insert <li> before the first child of <ul>
+    }
+}
+</script>
+
+</body>
+</html>
