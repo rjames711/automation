@@ -17,6 +17,8 @@ function Two_Sensor_Solenoid() {
     self.running = true;
     self.path = __dirname;
 
+    self.test = {'SHUT OFF' : self.shut_off};
+    
     self.shut_off = function() {
         console.log('shutting down fixture');
         fs.writeFile(self.path + '/run_state.txt', 0 + '\n', function(err) { if (err) throw err; }); //write a zero to runstate file to stop running.

@@ -4,6 +4,7 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script>
         $(document).ready(function() {
             var socket = io();
@@ -37,7 +38,7 @@
             function set_page() {
                 for (var key in data_object) {
                     console.log(key, ': ', data_object[key]);
-                    $("#"+key).text(key + ': ' + data_object[key]);
+                    $("#"+key).text(key.toUpperCase() + ': ' + data_object[key]);
                 }
             }
 
@@ -72,9 +73,9 @@
 <body>
     <p id="top_count"> count: </p>
     <p id="pText">data </p>
+    
+    <div id="app" class="container-fluid">
     <button id="start_btn">START</button>
-    <div id="app">
-
     </div>
 
 </body>
