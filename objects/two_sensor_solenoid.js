@@ -12,7 +12,7 @@ function Two_Sensor_Solenoid() {
      * Begin Public Variables
      */
     self.name = 'Two_Sensor_Solenoid'
-    self.state = 0;
+    self.state = false;
     self.count = 0;
     self.running = true;
     self.path = __dirname;
@@ -46,7 +46,7 @@ function Two_Sensor_Solenoid() {
      */
 
     var turn_off = function() {
-        self.state = 0;
+        self.state = false;
         output.writeSync(self.state);
         self.notify();
     }
@@ -59,13 +59,13 @@ function Two_Sensor_Solenoid() {
                 return 0;
             }
             if (parseInt(data) == 1) {
-                self.state = 0;
-                self.running = 1;
+                self.state = false;
+                self.running = true;
                 turn_on();
                 self.notify();
             }
             else {
-                self.running = 0;
+                self.running = false;
                 output.writeSync(0); //turn output on
                 self.notify();
             }
@@ -90,7 +90,7 @@ function Two_Sensor_Solenoid() {
 
     var turn_on = function() {
         if (self.state == 0) {
-            self.state = 1;
+            self.state = true;
             self.count++;
             self.notify();
             fs.writeFile(self.path + '/count.txt', self.count + '\n', function(err) { if (err) throw err; }); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
