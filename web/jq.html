@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script>
+        $(document).ready(function() {
+            var socket = io();
+            var data_object;
+            var running = false;
+            var first=true;
+         
+            $("#btn1").click(function() {
+                $("p").append(" <b>Appended text</b>.");
+            });
+
+            $("#start_btn").click(function() {
+                stop_start();
+            });
+
+            socket.on('count', function(cnt) {
+                $("#top_count").text('Count: ' + cnt);
+            });
+
+            socket.on('data', function(data) {
+                data_object = JSON.parse(data);
+                pText.innerText = 'data: ' + data;
+                if (first){
+                    first=false;
+                    make_page();
+                }
+                else
+                    set_page();
+            });
+
+            function set_page() {
+                for (var key in data_object) {
+                    console.log(key, ': ', data_object[key]);
+                    $("#"+key).text(key + ': ' + data_object[key]);
+                }
+            }
+
+            function make_page() {
+                console.log('ksdhfklashfdk;hafklhlahdfjnKCLSADKLhf;knsdvSDBsvvbSSVBN');
+                for (var key in data_object) {
+                    console.log(key, ': ', data_object[key]);
+                    var new_p = '<h2 id="' + key + '">' + key + ': ' + data_object[key] + '</h2>';
+                    $("#app").append(new_p);
+                }
+            }
+
+            function stop_start() {
+                console.log('in stopstart');
+                if (running) {
+
+                    socket.emit('command', 'stop');
+                    running = false;
+                    document.getElementById("start_btn").innerText = "START";
+                }
+                else {
+                    socket.emit('command', 'start');
+                    running = true;
+                    document.getElementById("start_btn").innerText = "STOP";
+                }
+
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <p id="top_count"> count: </p>
+    <p id="pText">data </p>
+    <button id="start_btn">START</button>
+    <div id="app">
+
+    </div>
+
+</body>
+
+</html>

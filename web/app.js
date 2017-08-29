@@ -72,6 +72,10 @@ app.get('/js', function (req, res) {
   res.sendFile(__dirname + '/js.html')
 });
 
+app.get('/jq', function (req, res) {
+  res.sendFile(__dirname + '/jq.html')
+});
+
 app.get('/doc', function(req, res){
   res.sendFile(__dirname + '/water dispersion fixture.mht');
 });
