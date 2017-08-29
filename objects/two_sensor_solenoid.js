@@ -47,7 +47,7 @@ function Two_Sensor_Solenoid() {
 
     var turn_off = function() {
         self.state = false;
-        output.writeSync(self.state);
+        output.writeSync(Number(self.state));
         self.notify();
     }
 
@@ -98,7 +98,7 @@ function Two_Sensor_Solenoid() {
             if (self.count % 1000 == 0) //stop at 1000 cycle intervals
                 self.shut_off();
             if (self.running)
-                output.writeSync(self.state); //turn output on
+                output.writeSync(Number(self.state)); //turn output on
         }
         self.notify();
     }
