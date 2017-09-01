@@ -1,48 +1,123 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Basic Functionaility</title>
-  </head>
-  <body>
-  <h2 id=count>Count: 0 </h2>
-<button type="button" id=start_btn onclick='stop_start()'>START</button>
- <p id="pText">data </p>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <script>
-        var socket = io();
-        
-        var running =false; //bad code, need to get status from server, just for testing here.
-        
-        socket.on('count', function(cnt){
-        count.innerText='Count: ' +cnt;
-        });
-        
-        socket.on('data', function(data){
-        pText.innerText='data: ' +data;
-        });
-        
-        function stop_start(){
-          console.log('in stopstart');
-          if(running){
-             socket.emit('command', 'stop');
-             running =false;
-             document.getElementById("start_btn").innerText = "START";
-          }
-          else{
-            socket.emit('command' , 'start');
-            running = true;
-            document.getElementById("start_btn").innerText = "STOP";
-          }
-          
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./main.css">
+  <script>
+    $(document).ready(function() {
+      var socket = io();
+      var data_object;
+      var running = false;
+      var first = true;
+
+      $("#start_btn").click(function() {
+        stop_start();
+      });
+
+      socket.on('count', function(cnt) {
+        $("#top_count").text('Count: ' + cnt);
+      });
+
+      socket.on('data', function(data) {
+        data_object = JSON.parse(data);
+        pText.innerText = 'data: ' + data;
+        if (first) {
+          first = false;
+          make_page(data_object);
         }
-       
-        
-        console.log('test');
+        else
+          set_page();
+      });
 
-         // End custom data handling
+      function set_page() {
+        for (var key in data_object) {
+          console.log(key, ': ', data_object[key]);
+          //$("#" + key).text(key.toUpperCase() + ': ' + data_object[key]);
+          $("#" + key).text(data_object[key]);
+        }
+      }
 
-    </script>
-  </body>
+      function make_page(data_object) {
+        console.log('ksdhfklashfdk;hafklhlahdfjnKCLSADKLhf;knsdvSDBsvvbSSVBN');
+        for (var key in data_object) {
+          console.log(key, ': ', data_object[key], ' type:', typeof data_object[key]);
+          if (typeof data_object[key] === 'object') {
+            console.log('tsa object');
+            make_page(data_object[key]);
+          }
+          else {
+            var newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "row");
+            //Create the html for showing the value name
+
+            var col_1 = document.createElement("div");
+            col_1.setAttribute("class", "col-sm-4");
+            col_1.setAttribute("style", "background-color:yellow;");
+
+            var new_value = document.createElement("div");
+            new_value.setAttribute("class", "well");
+            new_value.innerHTML = key.toUpperCase();
+            col_1.appendChild(new_value);
+            //Create the html for the value of the above property
+            var col_2 = document.createElement("div");
+            col_2.setAttribute("class", "col-sm-4");
+            col_2.setAttribute("style", "background-color:yellow;");
+            var new_state = document.createElement("div");
+            new_state.setAttribute("class", "alert alert-success");
+            new_state.setAttribute("id", key);
+            new_state.innerHTML = data_object[key];
+            col_2.appendChild(new_state);
+            newDiv.appendChild(col_1);
+            newDiv.appendChild(col_2);
+             $("#app").append(newDiv);
+            //var new_p = '<h2 id="' + key + '">' + key + ': ' + data_object[key] + '</h2>';
+            //$("#app").append(new_p);
+          }
+        }
+      }
+
+      function stop_start() {
+        console.log('in stopstart');
+        if (running) {
+
+          socket.emit('command', 'stop');
+          running = false;
+          document.getElementById("start_btn").innerText = "START";
+        }
+        else {
+          socket.emit('command', 'start');
+          running = true;
+          document.getElementById("start_btn").innerText = "STOP";
+        }
+
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <p id="top_count"> count: </p>
+  <div id="app" class="container">
+    <div class="row">
+      <div class="col-sm-4" style="background-color:yellow;">
+        <div class="well">
+          FIXTURE RUNNING:
+        </div>
+      </div>
+      <div class="col-sm-4" style="background-color:yellow;">
+        <div class="alert alert-success">
+          N <strong>TRUE</strong>
+        </div>
+      </div>
+      <div class="col-sm-4" style="background-color:yellow;">
+        <button type="button" class="btn btn-primary btn-xlarge btn-block" id="start_btn">START</button>
+      </div>
+    </div>
+  </div>
+  <p id="pText">data </p>
+</body>
+
 </html>
