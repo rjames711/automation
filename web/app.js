@@ -1,4 +1,6 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
+
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
@@ -10,6 +12,13 @@ const fixture = require('../objects/two_sensor_solenoid.js')
 var mach= new fixture();
 console.log('mach path', mach.path);
 console.log('forwarded info', mach.forwarded_info);
+
+//TODO Need to move html and css file to public subdirectory 
+var path = require('path');
+app.use(express.static(__dirname)); // Current directory is root
+//app.use(express.static(path.join(__dirname, 'public'))); //  "public" off of current is root
+
+
 
 /**** Method for reading count. Don't mess with unless you mean to ****/
 function get_file_data(){    
@@ -65,7 +74,7 @@ function set_count(cmd){
 
 //ROUTES
 app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/jq.html');
     io.emit('count', mach.count);
 });
 

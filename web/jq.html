@@ -5,13 +5,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./main.css">
     <script>
         $(document).ready(function() {
             var socket = io();
             var data_object;
             var running = false;
-            var first=true;
-         
+            var first = true;
+
             $("#btn1").click(function() {
                 $("p").append(" <b>Appended text</b>.");
             });
@@ -27,9 +28,9 @@
             socket.on('data', function(data) {
                 data_object = JSON.parse(data);
                 pText.innerText = 'data: ' + data;
-                if (first){
-                    first=false;
-                    make_page();
+                if (first) {
+                    first = false;
+                    make_page(data_object);
                 }
                 else
                     set_page();
@@ -38,16 +39,22 @@
             function set_page() {
                 for (var key in data_object) {
                     console.log(key, ': ', data_object[key]);
-                    $("#"+key).text(key.toUpperCase() + ': ' + data_object[key]);
+                    $("#" + key).text(key.toUpperCase() + ': ' + data_object[key]);
                 }
             }
 
-            function make_page() {
+            function make_page(data_object) {
                 console.log('ksdhfklashfdk;hafklhlahdfjnKCLSADKLhf;knsdvSDBsvvbSSVBN');
                 for (var key in data_object) {
-                    console.log(key, ': ', data_object[key]);
-                    var new_p = '<h2 id="' + key + '">' + key + ': ' + data_object[key] + '</h2>';
-                    $("#app").append(new_p);
+                    console.log(key, ': ', data_object[key], ' type:', typeof data_object[key]);
+                    if (typeof data_object[key] === 'object') {
+                        console.log('tsa object');
+                        make_page(data_object[key]);
+                    }
+                    else {
+                        var new_p = '<h2 id="' + key + '">' + key + ': ' + data_object[key] + '</h2>';
+                        $("#app").append(new_p);
+                    }
                 }
             }
 
@@ -72,12 +79,24 @@
 
 <body>
     <p id="top_count"> count: </p>
-    <p id="pText">data </p>
-    
-    <div id="app" class="container-fluid">
-    <button id="start_btn">START</button>
+    <div id="app" class="container">
+        <div class="row">
+            <div class="col-sm-4" style="background-color:yellow;">
+                <div class="well">
+                    FIXTURE RUNNING:
+                </div>
+            </div>
+            <div class="col-sm-4" style="background-color:yellow;">
+                <div class="alert alert-success">
+                    N  <strong>TRUE</strong>
+                </div>
+            </div>
+            <div class="col-sm-4" style="background-color:yellow;">
+                <button type="button" class="btn btn-primary btn-xlarge btn-block" id="start_btn">START</button>
+            </div>
+        </div>
     </div>
-
+   <p id="pText">data </p>
 </body>
 
 </html>

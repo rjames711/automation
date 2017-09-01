@@ -17,7 +17,7 @@ function Two_Sensor_Solenoid() {
     self.running = true;
     self.path = __dirname;
 
-    self.test = {'SHUT OFF' : self.shut_off};
+    self.outercommand = {'SHUT OFF' : "itsa button" , 'change count' : 'itsa number input'};
     
     self.shut_off = function() {
         console.log('shutting down fixture');

@@ -1,0 +1,38 @@
+.btn-xlarge {
+    margin: 10px;
+    padding: 14px 28px;
+    font-size: 22px; 
+    line-height: normal;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+}
+
+.alert{
+        margin: 10px;
+    padding: 14px 28px;
+    font-size: 22px; 
+    line-height: normal;
+
+}
+.well{
+        margin: 10px;
+    padding: 14px 28px;
+    font-size: 22px; 
+    line-height: normal;
+
+}
+
+p{
+        margin: 10px;
+    padding: 14px 28px;
+    font-size: 22px; 
+    line-height: normal;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+}
+
+body {
+    background-color: lightgrey;
+}
