@@ -8,7 +8,7 @@ var speed=1000;
 var run_state=0;
 var fs =require('fs');
 var count =0;
-const fixture = require('../objects/two_sensor_solenoid.js')
+const fixture = require('../objects/fixtures/two_sensor_solenoid.js')
 var mach= new fixture();
 console.log('mach path', mach.path);
 console.log('forwarded info', mach.forwarded_info);

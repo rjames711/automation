@@ -49,7 +49,7 @@ function Two_Sensor_Solenoid() {
 
     var turn_off = function() {
         self.state = false;
-        output.writeSync(Number(self.state));
+        solenoid.switch(Number(self.state));
         self.notify();
     }
 
@@ -68,7 +68,7 @@ function Two_Sensor_Solenoid() {
             }
             else {
                 self.running = false;
-                output.writeSync(0); //turn output on
+                solenoid.switch(0); //turn output on
                 self.notify();
             }
         });
@@ -85,10 +85,10 @@ function Two_Sensor_Solenoid() {
         var gpio_module = './onoff';
     }
 
-    var Gpio = require(gpio_module).Gpio,
-        output = new Gpio(26, 'out'), //changed these two values
-        front_stop = new Gpio(13, 'in', 'both'),
-        end_stop = new Gpio(19, 'in', 'both');
+        const binary_pin= require('../components/binary_pin.js')
+        var solenoid = new binary_pin(26, 'out');
+        var front_stop = new binary_pin(13, 'in');
+        var end_stop = new binary_pin(19, 'in');
 
     var turn_on = function() {
         if (self.state == 0) {
@@ -100,7 +100,7 @@ function Two_Sensor_Solenoid() {
             if (self.count % 1000 == 0) //stop at 1000 cycle intervals
                 self.shut_off();
             if (self.running)
-                output.writeSync(Number(self.state)); //turn output on
+                solenoid.switch(Number(self.state)); //turn output on
         }
         self.notify();
     }
