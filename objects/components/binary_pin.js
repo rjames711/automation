@@ -25,7 +25,7 @@ function binary_pin(pin, direction){
 //TODO CHECK IN FUNCTION IF PIN IS INPUT OR OUTPUT 
 //Turns output on or off
     self.switch = function(state){
-        bin_pin.writeSync(Number(self.state));
+        bin_pin.writeSync(state);
     }
     
     self.watch =function(callback){

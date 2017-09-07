@@ -50,7 +50,7 @@ function Two_Sensor_Solenoid() {
     var turn_off = function() {
         self.state = false;
         solenoid.switch(Number(self.state));
-        self.notify();
+     //   self.notify();
     }
 
 
