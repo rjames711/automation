@@ -85,7 +85,7 @@ function Two_Sensor_Solenoid() {
         var gpio_module = './onoff';
     }
 
-        const binary_pin= require('../components/binary_pin.js')
+        const binary_pin= require('../../components/binary_pin.js')
         var solenoid = new binary_pin(26, 'out');
         var front_stop = new binary_pin(13, 'in');
         var end_stop = new binary_pin(19, 'in');
