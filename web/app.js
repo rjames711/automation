@@ -34,11 +34,6 @@ get_file_data();
 /****End Method for reading count. Don't mess with unless you mean to ****/
 
 mach.notify = function(){
-  //console.log(mach);
-  //console.log();
-  //console.log(JSON.stringify(mach));
- 
-  
   count= mach.count;
   io.emit('count',count);
   io.emit('data' ,JSON.stringify(mach));
