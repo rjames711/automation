@@ -48,11 +48,14 @@ function Timed_Cycle_Solenoid() {
 
     var toggle = function() {
         if (self.running) {
-            console.log(self.state);
+            process.stdout.write("Running. Count: " + self.count + "        \r"); // update count in place
             self.state = !self.state;
             solenoid.switch(Number(self.state));
-            if (self.state)
+            if (self.state){
+                self.count++;
                 self.notify();
+                
+            }
         }
     }
 
