@@ -48,7 +48,8 @@ function Timed_Cycle_Solenoid() {
 
     var toggle = function() {
         if (self.running) {
-            process.stdout.write("Running. Count: " + self.count + "        \r"); // update count in place
+            fs.writeFile(self.path + '/count.txt', self.count + '\n', function(err) { if (err) throw err; }); 
+           process.stdout.write("Running. Count: " + self.count + "        \r"); // update count in place
             self.state = !self.state;
             solenoid.switch(Number(self.state));
             if (self.state){
@@ -94,10 +95,18 @@ function Timed_Cycle_Solenoid() {
     const binary_pin = require('../../components/binary_pin.js');
     var solenoid = new binary_pin(26, 'out');
 
-
-
-
-
+/**** Method for reading count. Don't mess with unless you mean to ****/
+function get_file_data(){    
+    function set_count(count) {self.count=count} //Sets the count in the created object.
+    function read_count (callback){
+        fs.readFile( self.path + '/count.txt', 'utf8' ,function(err,data){
+            if(err){throw err}
+            callback(data)
+            });}
+    read_count(set_count)
+}
+get_file_data();
+/****End Method for reading count. Don't mess with unless you mean to ****/
 
     //the watch funciton below does not seem to be working in this module. May want totry changing fs to var.fs
     fs.watch(self.path + '/run_state.txt', get_run_state);
