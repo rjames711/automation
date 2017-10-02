@@ -14,11 +14,11 @@ var steps=0;
 var steps_needed = 0;
 var steps_per_rev = 200*15.3;
 var current_pos = 0;
-var dest_pos = 45;
+var dest_pos = 60;
 var end_delay=500;
 var homed_in = false;
 var new_home_pass = true;
-var offset=-90;
+var offset = dest_pos-180;
 var cycling =true;
 
 //rotate maximum 180 degrees trying to find home
@@ -63,7 +63,8 @@ step_pin.on('alert', function(level, tick) {
         if (steps >= steps_needed) {
             steps=0;
             stop_motor();
-            setTimeout(cycle, end_delay);
+            if(cycling)
+                setTimeout(cycle, end_delay);
         }
         if ( steps % 100 ==0)
             console.log(steps, ' ', steps_needed, ' ', current_pos);
@@ -110,8 +111,13 @@ sensor.on('interrupt', function(level) {
 process.on('SIGINT', function() {
 console.log('shutting down');
 cycling=false;
+//steps_needed=0;
 stop_motor();
+
+setTimeout(function(){
 go_to_dest(offset ,500);
+},500);
+
 setTimeout(cleanup, 3000);
 });
 
