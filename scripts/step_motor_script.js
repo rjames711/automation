@@ -14,10 +14,12 @@ var steps=0;
 var steps_needed = 0;
 var steps_per_rev = 200*15.3;
 var current_pos = 0;
-var dest_pos = 180;
+var dest_pos = 45;
 var end_delay=500;
 var homed_in = false;
 var new_home_pass = true;
+var offset=-90;
+var cycling =true;
 
 //rotate maximum 180 degrees trying to find home
 //sensor callback function then sets params and starts
@@ -28,10 +30,10 @@ go_to_dest(180, 300);
 //cycles between 0 and destination position
 function cycle(){
     current_pos = Math.round(current_pos);
-    if (current_pos == 0 )
+    if (current_pos == offset )
         go_to_dest(dest_pos,spd);
     else
-        go_to_dest(0, spd);
+        go_to_dest( offset , spd);
 }
 
 //Set the direction and desired number of steps to next position and begins stepping
@@ -39,8 +41,10 @@ function go_to_dest(dest_pos, spd){
     var displacement = dest_pos - current_pos;
     console.log(dest_pos, current_pos, displacement);
     steps_needed = Math.abs(degrees_to_steps(displacement));
-    if((displacement) > 0)
+    if((displacement) > 0){
        change_dir(1);
+        new_home_pass=true;
+    }
     else
         change_dir(0);
     run_motor(spd);
@@ -56,7 +60,7 @@ step_pin.on('alert', function(level, tick) {
             current_pos += steps_to_degrees(1);
         else
             current_pos -= steps_to_degrees(1);
-        if (steps == steps_needed) {
+        if (steps >= steps_needed) {
             steps=0;
             stop_motor();
             setTimeout(cycle, end_delay);
@@ -81,6 +85,7 @@ function run_motor(spd) {
 }
 function stop_motor(){
     step_pin.digitalWrite(0);
+    steps_needed=0;
 }
 function change_dir(new_dir){
     dir=new_dir;
@@ -89,24 +94,34 @@ function change_dir(new_dir){
 
 sensor.on('interrupt', function(level) {
     if(homed_in & new_home_pass){
+        new_home_pass=false;
         console.log('Found home at: ', current_pos);
     }
     else if (!homed_in){
+        homed_in = true;
         current_pos=0;
         console.log("homed in position");
-        cycle();
+        stop_motor();
+        if (cycling)
+            setTimeout(cycle, 500);
     }
 });
 
 process.on('SIGINT', function() {
+console.log('shutting down');
+cycling=false;
+stop_motor();
+go_to_dest(offset ,500);
+setTimeout(cleanup, 3000);
+});
+
+function cleanup(){
     step_pin.digitalWrite(0);
     dir_pin.digitalWrite(0);
     pigpio.terminate(); // pigpio C library terminated here
     console.log('Terminating...');
     process.exit();
-});
-
-
+}
 
 
 
