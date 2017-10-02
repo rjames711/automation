@@ -16,8 +16,14 @@ var steps_per_rev = 200*15.3;
 var current_pos = 0;
 var dest_pos = 180;
 var end_delay=500;
+var homed_in = false;
+var new_home_pass = true;
 
-cycle();
+//rotate maximum 180 degrees trying to find home
+//sensor callback function then sets params and starts
+//cycling. This seems very hard to follow. 
+go_to_dest(180, 300);
+
 
 //cycles between 0 and destination position
 function cycle(){
@@ -80,6 +86,18 @@ function change_dir(new_dir){
     dir=new_dir;
     dir_pin.digitalWrite(dir);
 }
+
+sensor.on('interrupt', function(level) {
+    if(homed_in & new_home_pass){
+        console.log('Found home at: ', current_pos);
+    }
+    else if (!homed_in){
+        current_pos=0;
+        console.log("homed in position");
+        cycle();
+    }
+});
+
 process.on('SIGINT', function() {
     step_pin.digitalWrite(0);
     dir_pin.digitalWrite(0);
