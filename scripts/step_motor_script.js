@@ -15,11 +15,11 @@ var steps = 0;
 var steps_needed = 0;
 var steps_per_rev = 200 * 15.3;
 var current_pos = 0;
-var dest_pos = 60;
+var dest_pos = 28;
 var end_delay = 500;
 var homed_in = false;
 var new_home_pass = true;
-var offset = dest_pos - 180;
+var offset = dest_pos - 200;
 var cycling = true;
 var count;
 
@@ -40,7 +40,7 @@ fs.readFile('count.txt',function(err,data){
 //rotate maximum 180 degrees trying to find home
 //sensor callback function then sets params and starts
 //cycling. This seems very hard to follow. 
-go_to_dest(180, 300);
+go_to_dest(-90, 300);
 
 
 //cycles between 0 and destination position
@@ -50,7 +50,7 @@ function cycle() {
         go_to_dest(dest_pos, spd);
         count++;
         fs.writeFile('count.txt', count+'\n',function(err){if(err)throw err;}); //save count to file. Added error handling callback function to keep newer versoind of node from complaining.
-        console.log(count);
+        console.log('Count: ', count);
         //process.stdout.write("Running. Count: " +count + "        \r"); // update count in place
     }
     else
@@ -121,7 +121,7 @@ function change_dir(new_dir) {
 sensor.on('interrupt', function(level) {
     if (homed_in & new_home_pass) {
         new_home_pass = false;
-        console.log('Found home at: ', current_pos);
+        console.log('Found home at: ', Math.round(current_pos, ' degrees'));
     }
     else if (!homed_in) {
         homed_in = true;
@@ -140,10 +140,10 @@ process.on('SIGINT', function() {
     stop_motor();
 
     setTimeout(function() {
-        go_to_dest(offset, 500);
+        go_to_dest(dest_pos, 500);
     }, 500);
 
-    setTimeout(cleanup, 3000);
+    setTimeout(cleanup, 4000);
 });
 
 function cleanup() {
