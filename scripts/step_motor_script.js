@@ -23,6 +23,8 @@ var offset = dest_pos - 200;
 var cycling = true;
 var count;
 
+fs.watch('run_state.txt',get_run_state);
+
 fs.readFile('count.txt',function(err,data){
     if(err){
         console.log('no count file');
@@ -41,6 +43,7 @@ fs.readFile('count.txt',function(err,data){
 //sensor callback function then sets params and starts
 //cycling. This seems very hard to follow. 
 go_to_dest(-90, 300);
+
 
 
 //cycles between 0 and destination position
@@ -153,4 +156,23 @@ function cleanup() {
     pigpio.terminate(); // pigpio C library terminated here
     console.log('Terminating...');
     process.exit();
+}
+
+function get_run_state(){
+    fs.readFile('run_state.txt',function(err,data){
+       if(err){
+                console.log('no run_state.txt file');
+                return 0;
+                 }
+    if (parseInt(data)==1){
+        state=0;
+        cycling = 1;
+        cycle();
+    }
+    else{
+       cycling =0; 
+       stop_motor();
+   }
+});   
+
 }
