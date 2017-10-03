@@ -64,10 +64,11 @@ function go_to_dest(dest_pos, spd) {
     steps_needed = Math.abs(degrees_to_steps(displacement));
     if ((displacement) > 0) {
         change_dir(1);
-        new_home_pass = true;
     }
-    else
+    else{
+        new_home_pass = true;
         change_dir(0);
+        }
     run_motor(spd);
 }
 
