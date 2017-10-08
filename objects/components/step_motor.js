@@ -9,21 +9,36 @@ function Step_Motor(direction_pin, stepper_pin) {
     var position = 0;
     var direction = 0;
     var movements = [];
+    var current_move=0;
+    var cycling=false;
 
     this.add_movement = function(new_position, speed, delay) {
         movements.push([new_position, speed, delay]);
     }
 
     this.begin_stepping = function() {
+        current_move=0;
         do_next_movement();
     }
-
+    
+    this.cycle = function(){
+        cycling = true;
+        current_move=0;
+        do_next_movement();
+    }
+    
     var do_next_movement = function() {
-        if(movements.length > 0){   
-        var next_move = movements.shift(),
+        if(cycling){
+            if( current_move == movements.length-1){ 
+                current_move = 0;
+                console.log('cycling');
+        }}
+        if(movements.length > current_move){   
+        var next_move = movements[current_move];
             next_pos = next_move[0],
             spd = next_move[1],
             delay = next_move[2];
+        current_move++;
         setTimeout(function() { step_to(next_pos, spd) }, delay)
     }
     }
@@ -60,7 +75,7 @@ function Step_Motor(direction_pin, stepper_pin) {
             position++;
         else
             position--;
-            console.log(position, ' ', get_steps_needed());
+//            console.log(position, ' ', get_steps_needed());
         if (get_steps_needed() == 0) {
             stop_motor();
             console.log(position, ' ', get_steps_needed());
@@ -91,4 +106,6 @@ stepper1.add_movement(200, 300, 250);
 stepper1.add_movement(0, 700, 250);
 stepper1.add_movement(-300, 700, 250);
 stepper1.add_movement(0, 700, 250);
-stepper1.begin_stepping();
+stepper1.cycle();
+
+//setTimeout(stepper1.begin_stepping, 4000);
