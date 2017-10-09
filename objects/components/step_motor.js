@@ -12,20 +12,29 @@ function Step_Motor(direction_pin, stepper_pin, steps_per_rev) {
     var current_move=0;
     var cycling=false;
     var steps_per_rev = steps_per_rev;
+    var callback;
     
     this.add_degrees_movement = function(degrees, speed, delay){
         var steps = (degrees / 360 ) * steps_per_rev;
-        this.add_movement(degrees, speed, delay);
+        this.add_movement(steps, speed, delay);
     }
     
     this.clear_movements=function(){
      movements=[];   
     }
-    
+    this.set_position = function(new_position){
+        position = new_position
+    } 
+    this.reset_current_move = function(){
+        current_move=0;
+    }
     this.add_movement = function(new_position, speed, delay) {
         movements.push([new_position, speed, delay]);
     }
-
+    
+    this.set_callback = function(new_callback){
+        callback= new_callback;   
+    }
     this.begin_stepping = function() {
         current_move=0;
         do_next_movement();
@@ -51,6 +60,8 @@ function Step_Motor(direction_pin, stepper_pin, steps_per_rev) {
         current_move++;
         setTimeout(function() { step_to(next_pos, spd) }, delay)
     }
+    else
+        callback();
     }
 
     var step_to = function(new_position, spd) {
@@ -119,4 +130,6 @@ stepper1.add_movement(0, 700, 250);
 stepper1.cycle();
 */
 
-module.exports = Step_Motor();
+console.log('tetst');
+
+module.exports = Step_Motor;
