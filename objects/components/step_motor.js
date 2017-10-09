@@ -1,4 +1,4 @@
-function Step_Motor(direction_pin, stepper_pin) {
+function Step_Motor(direction_pin, stepper_pin, steps_per_rev) {
 
     var pigpio = require('pigpio');
     var Gpio = pigpio.Gpio;
@@ -11,7 +11,17 @@ function Step_Motor(direction_pin, stepper_pin) {
     var movements = [];
     var current_move=0;
     var cycling=false;
-
+    var steps_per_rev = steps_per_rev;
+    
+    this.add_degrees_movement = function(degrees, speed, delay){
+        var steps = (degrees / 360 ) * steps_per_rev;
+        this.add_movement(degrees, speed, delay);
+    }
+    
+    this.clear_movements=function(){
+     movements=[];   
+    }
+    
     this.add_movement = function(new_position, speed, delay) {
         movements.push([new_position, speed, delay]);
     }
@@ -34,7 +44,7 @@ function Step_Motor(direction_pin, stepper_pin) {
                 console.log('cycling');
         }}
         if(movements.length > current_move){   
-        var next_move = movements[current_move];
+        var next_move = movements[current_move],
             next_pos = next_move[0],
             spd = next_move[1],
             delay = next_move[2];
@@ -98,8 +108,8 @@ function Step_Motor(direction_pin, stepper_pin) {
 
 }
 
+/*
 var stepper1 = new Step_Motor(17, 27);
-
 stepper1.add_movement(50, 300, 0);
 stepper1.add_movement(100, 300, 500);
 stepper1.add_movement(200, 300, 250);
@@ -107,5 +117,6 @@ stepper1.add_movement(0, 700, 250);
 stepper1.add_movement(-300, 700, 250);
 stepper1.add_movement(0, 700, 250);
 stepper1.cycle();
+*/
 
-//setTimeout(stepper1.begin_stepping, 4000);
+module.exports = Step_Motor();
