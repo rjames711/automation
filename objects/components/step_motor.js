@@ -9,59 +9,60 @@ function Step_Motor(direction_pin, stepper_pin, steps_per_rev) {
     var position = 0;
     var direction = 0;
     var movements = [];
-    var current_move=0;
-    var cycling=false;
+    var current_move = 0;
+    var cycling = false;
     var steps_per_rev = steps_per_rev;
     var callback;
-    
-    this.add_degrees_movement = function(degrees, speed, delay){
-        var steps = (degrees / 360 ) * steps_per_rev;
+
+    this.add_degrees_movement = function(degrees, speed, delay) {
+        var steps = (degrees / 360) * steps_per_rev;
         this.add_movement(steps, speed, delay);
     }
-    
-    this.clear_movements=function(){
-     movements=[];   
+
+    this.clear_movements = function() {
+        movements = [];
     }
-    this.set_position = function(new_position){
+    this.set_position = function(new_position) {
         position = new_position
-    } 
-    this.reset_current_move = function(){
-        current_move=0;
+    }
+    this.reset_current_move = function() {
+        current_move = 0;
     }
     this.add_movement = function(new_position, speed, delay) {
         movements.push([new_position, speed, delay]);
     }
-    
-    this.set_callback = function(new_callback){
-        callback= new_callback;   
+
+    this.set_callback = function(new_callback) {
+        callback = new_callback;
     }
     this.begin_stepping = function() {
-        current_move=0;
+        current_move = 0;
         do_next_movement();
     }
-    
-    this.cycle = function(){
+
+    this.cycle = function() {
         cycling = true;
-        current_move=0;
+        current_move = 0;
         do_next_movement();
     }
-    
+
     var do_next_movement = function() {
-        if(cycling){
-            if( current_move == movements.length-1){ 
+        if (cycling) {
+            if (current_move == movements.length - 1) {
                 current_move = 0;
                 console.log('cycling');
-        }}
-        if(movements.length > current_move){   
-        var next_move = movements[current_move],
-            next_pos = next_move[0],
-            spd = next_move[1],
-            delay = next_move[2];
-        current_move++;
-        setTimeout(function() { step_to(next_pos, spd) }, delay)
-    }
-    else
-        callback();
+            }
+        }
+        if (movements.length > current_move) {
+            var next_move = movements[current_move],
+                next_pos = next_move[0],
+                spd = next_move[1],
+                delay = next_move[2];
+            current_move++;
+            setTimeout(function() { step_to(next_pos, spd) }, delay)
+        }
+        else
+            callback();
     }
 
     var step_to = function(new_position, spd) {
@@ -96,7 +97,7 @@ function Step_Motor(direction_pin, stepper_pin, steps_per_rev) {
             position++;
         else
             position--;
-//            console.log(position, ' ', get_steps_needed());
+        //            console.log(position, ' ', get_steps_needed());
         if (get_steps_needed() == 0) {
             stop_motor();
             console.log(position, ' ', get_steps_needed());
