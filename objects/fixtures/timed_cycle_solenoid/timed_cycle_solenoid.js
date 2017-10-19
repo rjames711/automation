@@ -16,7 +16,7 @@ function Timed_Cycle_Solenoid() {
     self.count = 0;
     self.running = true;
     self.path = __dirname;
-
+    self.interval=2000;
     self.outercommand = { 'SHUT OFF': "itsa button", 'change count': 'itsa number input' };
 
     self.shut_off = function() {
@@ -110,7 +110,7 @@ get_file_data();
 
     //the watch funciton below does not seem to be working in this module. May want totry changing fs to var.fs
     fs.watch(self.path + '/run_state.txt', get_run_state);
-    setInterval(toggle,1000);
+    setInterval(toggle,self.interval);
 
 }
 
