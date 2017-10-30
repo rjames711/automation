@@ -97,7 +97,7 @@ function Step_Motor(direction_pin, stepper_pin, steps_per_rev) {
             position++;
         else
             position--;
-        //            console.log(position, ' ', get_steps_needed());
+        console.log(position, ' ', get_steps_needed());
         if (get_steps_needed() == 0) {
             stop_motor();
             console.log(position, ' ', get_steps_needed());
