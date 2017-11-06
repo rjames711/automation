@@ -7,6 +7,8 @@ console.log('starting');
 
 function Timed_Cycle_Solenoid() {
     var self = this;
+    //var solenoid_pin=26; //to work with original perf board prototype
+    var solenoid_pin=19;//to work with asme valve fixture pcb rev 1 
 
     /**
      * Begin Public Variables
@@ -93,7 +95,7 @@ function Timed_Cycle_Solenoid() {
     }
 
     const binary_pin = require('../../components/binary_pin.js');
-    var solenoid = new binary_pin(26, 'out');
+    var solenoid = new binary_pin(solenoid_pin, 'out');
 
 /**** Method for reading count. Don't mess with unless you mean to ****/
 function get_file_data(){    

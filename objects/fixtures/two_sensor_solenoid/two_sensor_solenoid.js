@@ -86,10 +86,15 @@ function Two_Sensor_Solenoid() {
     }
 
         const binary_pin= require('../../components/binary_pin.js')
-        var solenoid = new binary_pin(26, 'out');
-        var front_stop = new binary_pin(13, 'in');
-        var end_stop = new binary_pin(19, 'in');
-
+        //original pin mapings with perf board prototypes
+        //var solenoid = new binary_pin(26, 'out');
+        //var front_stop = new binary_pin(13, 'in');
+        //var end_stop = new binary_pin(19, 'in');
+        
+        //pin mappings for asme valve fixture pcb rev 1. note tested and found to be working
+        var solenoid = new binary_pin(19, 'out');
+        var front_stop = new binary_pin(17, 'in');
+        var end_stop = new binary_pin(27, 'in');
     var turn_on = function() {
         if (self.state == 0) {
             self.state = true;
