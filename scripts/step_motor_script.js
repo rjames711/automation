@@ -12,13 +12,13 @@
    var pigpio = require(gpio_module);
   
    var Gpio = pigpio.Gpio;
-   var sensor = new Gpio(19, {
+   var sensor = new Gpio(17, {
        mode: Gpio.INPUT,
        pullUpDown: Gpio.PUD_DOWN,
        edge: Gpio.RISING_EDGE,
    });
-   var dir_pin = new Gpio(17, { mode: Gpio.OUTPUT });
-   var step_pin = new Gpio(27, { mode: Gpio.OUTPUT, alert: true });
+   var dir_pin = new Gpio(21, { mode: Gpio.OUTPUT });
+   var step_pin = new Gpio(20, { mode: Gpio.OUTPUT, alert: true });
    var state = true;
    var spd = 700;
    var dir = true;
@@ -26,7 +26,7 @@
    var steps_needed = 0;
    var steps_per_rev = 200 * 15.3;
    var current_pos = 0;
-   var dest_pos = 28;
+   var dest_pos = 20;
    var end_delay = 500;
    var homed_in = false;
    var new_home_pass = true;

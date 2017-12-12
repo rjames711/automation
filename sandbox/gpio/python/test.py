@@ -5,11 +5,13 @@ import time
 import pigpio
 
 pi = pigpio.pi()
-
-pi.set_mode(21,pigpio.OUTPUT)
+pin=20
+pi.set_mode(pin,pigpio.OUTPUT)
 
 while True:
-    pi.write(21, 1)
-    time.sleep(.5)
-    pi.write(21,0)
-    time.sleep(.5)
+    pi.write(pin, 1)
+    print('high')
+    time.sleep(.01)
+    pi.write(pin,0)
+    print('low')
+    time.sleep(.01)
