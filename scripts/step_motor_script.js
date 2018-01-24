@@ -20,17 +20,17 @@
    var dir_pin = new Gpio(21, { mode: Gpio.OUTPUT });
    var step_pin = new Gpio(20, { mode: Gpio.OUTPUT, alert: true });
    var state = true;
-   var spd = 700;
+   var spd = 500;
    var dir = true;
    var steps = 0;
    var steps_needed = 0;
    var steps_per_rev = 200 * 15.3;
    var current_pos = 0;
-   var dest_pos = 20;
+   var dest_pos = -5; //Closing position on valve fixture, offset from sensor position
    var end_delay = 500;
    var homed_in = false;
    var new_home_pass = true;
-   var offset = dest_pos - 200;
+   var offset = dest_pos + 90; //subtracted number is angular disp from closed position
    var cycling = true;
    var count;
 
@@ -53,7 +53,7 @@
    //rotate maximum 180 degrees trying to find home
    //sensor callback function then sets params and starts
    //cycling. This seems very hard to follow. 
-   go_to_dest(-90, 300);
+   go_to_dest(90, 300);
 
 
 
@@ -140,6 +140,8 @@
        if (homed_in & new_home_pass) {
            new_home_pass = false;
            console.log('Found home at: ', Math.round(current_pos, ' degrees'));
+           //correct for any missed steps based on position of sensor. Comment to get accuracy over time
+           //current_pos=0; //actually keep commented, caused problem
        }
        else if (!homed_in) {
            homed_in = true;
