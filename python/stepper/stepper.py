@@ -59,6 +59,7 @@ class Stepper:
             self.pos_error = self.position
             self.new_home_pass=False
             self.position=0 #reset position to zero (to use if steps are missing)
+            print 'Pos Error: ', self.pos_error
         elif self.pi.read(self.dir_pin)==1:
             self.new_home_pass=True
 
@@ -80,7 +81,8 @@ class Stepper:
             self.moves=list(self.cycle_moves) #if cycle is set, cycle_move will have moves
             self.count+=1 #if no moves left that a cycles has completed
             self.log_count()
-            self.update_line()
+            #self.update_line()
+            print 'Count: ', self.count
         if self.moves:
             move=self.moves.pop(0)
             self.step_deg_pos(move[0], move[1], move[2])
@@ -97,6 +99,7 @@ class Stepper:
         time.sleep(delay)
         steps= int(self.steps_per_rev*(deg/360.0))
         self.target=steps
+        #print 'Target: ' , self.target , 'Pos:, ', self.position
         if self.position < self.target:
             self.set_direction(1)
         else:
@@ -127,8 +130,15 @@ if __name__=='__main__':
     start_pos=20
     motor=Stepper(20, 21, 17, 3060)
     motor.find_home(1,0)
+    
+    #motor.add_move(start_pos-5,1,.5)
+    #motor.add_move(start_pos-100,3,0)
+    #motor.add_move(start_pos-95,1,.5)
+    #motor.add_move(start_pos,3,0)
+    
     motor.add_move(start_pos-100,3,.5)
     motor.add_move(start_pos,3,.5)
+    
     motor.set_cycle(1)
     motor.run_next_move()
 
