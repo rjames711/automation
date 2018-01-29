@@ -51,16 +51,15 @@ function Timed_Cycle_Solenoid() {
     var toggle = function() {
         if (self.running) {
             fs.writeFile(self.path + '/count.txt', self.count + '\n', function(err) { if (err) throw err; });
-            fs.writeFile(self.path + '/log.txt', 'count: ' +
-                self.count + ' time: ' + (new Date).getTime() + '\n',
-                function(err) { if (err) throw err; });
-            (new Date).getTime();
             process.stdout.write("Running. Count: " + self.count + ' activations ' + self.activations + "        \r"); // update count in place
             self.state = !self.state;
             solenoid.switch(Number(self.state));
             if (self.state) {
                 self.count++;
                 self.notify();
+            fs.appendFile(self.path + '/log.txt', 'count, ' +
+                self.count + ', time, ' + (new Date).getTime() + '\n',
+                function(err) { if (err) throw err; });
 
             }
         }
@@ -107,8 +106,8 @@ function Timed_Cycle_Solenoid() {
     button.watch(function(err, value) {
         self.activations += .5;
         if (self.activations % 1 == 0) {
-            fs.writeFile(self.path + '/log.txt', 'activations: ' +
-                self.activations + ' time: ' + (new Date).getTime() + '\n',
+            fs.appendFile(self.path + '/log.txt', 'activations, ' +
+                self.activations + ', time, ' + (new Date).getTime() + '\n',
                 function(err) { if (err) throw err; });
         }
         //    console.log(self.count, 'cycles', self.activations, 'activations');

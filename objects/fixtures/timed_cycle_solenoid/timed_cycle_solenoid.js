@@ -7,8 +7,8 @@ console.log('starting');
 
 function Timed_Cycle_Solenoid() {
     var self = this;
-    //var solenoid_pin=26; //to work with original perf board prototype
-    var solenoid_pin=19;//to work with asme valve fixture pcb rev 1 
+    var solenoid_pin=26; //to work with original perf board prototype
+    //var solenoid_pin=19;//to work with asme valve fixture pcb rev 1 
 
     /**
      * Begin Public Variables
