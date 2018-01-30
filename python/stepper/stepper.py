@@ -160,7 +160,8 @@ if __name__=='__main__':
             sys.exit(0)
     motor.stop_motor()
     motor.pi.stop()
-
+else:
+    print 'imported stepper'
 
     '''
     motor.set_direction(0)
