@@ -127,17 +127,17 @@ class Stepper:
         self.cycle_moves=[]
 if __name__=='__main__':
     #Begin Script 
-    start_pos=20
+    start_pos=  50
+    end_pos = -170
     motor=Stepper(20, 21, 17, 3060)
     motor.find_home(1,0)
     
-    #motor.add_move(start_pos-5,1,.5)
-    #motor.add_move(start_pos-100,3,0)
-    #motor.add_move(start_pos-95,1,.5)
-    #motor.add_move(start_pos,3,0)
-    
-    motor.add_move(start_pos-100,3,.5)
-    motor.add_move(start_pos,3,.5)
+    motor.add_move(end_pos+10,3,0) 
+    motor.add_move(end_pos,2,0)
+    motor.add_move(end_pos+10,2,0.2) #Note: Delay proceeds movement
+    motor.add_move(start_pos-10 ,3,0) # Does not like it if the offset is same as home
+    motor.add_move(start_pos ,2,0)
+    motor.add_move(start_pos-10 ,2,.2) # Does not like it if the offset is same as home
     
     motor.set_cycle(1)
     motor.run_next_move()
