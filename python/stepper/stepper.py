@@ -127,8 +127,8 @@ class Stepper:
         self.cycle_moves=[]
 if __name__=='__main__':
     #Begin Script 
-    start_pos=  50
-    end_pos = -170
+    start_pos=  30
+    end_pos = start_pos -100
     motor=Stepper(20, 21, 17, 3060)
     motor.find_home(1,0)
     

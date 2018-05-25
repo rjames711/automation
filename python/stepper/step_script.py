@@ -1,5 +1,6 @@
 import stepper, time, sys
 motor=stepper.Stepper(20, 21, 17, 200*27)
+
 spd = 5
 
 end = 180
@@ -19,9 +20,13 @@ print motor.position, motor.target
 motor.set_cycle(1)
 motor.run_next_move()
 while motor.position!=motor.target or motor.moves:
-    print motor.position, motor.target
+    #print motor.position, motor.target
     try:
-        time.sleep(1)
+        time.sleep(.1)
+        if motor.count % 250 == 0:
+            motor.stop_motor()
+            while True:
+                time.sleep(1)
     except KeyboardInterrupt:
         print('Homing motor')
         motor.stop_motor()
