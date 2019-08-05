@@ -2,7 +2,12 @@
 <head>
 
 </head>
+<style>
 
+input{
+margin-top:12px;
+}
+</style>
 <body>
 		<table>
 				{% for test in tests %}
@@ -11,12 +16,13 @@
 						<td> {{ test.count }} </td>
 						<td> <form> 
 								{% if test.running %}
-								<input type=submit formmethod="post" name="{{test.name}}" value='turn off'>
+								<input type=submit formmethod="post" name="{{test.name}}" value='TURN OFF'>
 								{% else %}
-								<input type=submit formmethod="post" name="{{test.name}}" value='turn on'>
+								<input type=submit formmethod="post" name="{{test.name}}" value='TURN ON'>
 								{% endif  %}
 							</form>
 				</tr>
 				{% endfor %}
 		</table>
+        <a href="/app"><button>RELOAD COUNTS</button></a>
 </body>
