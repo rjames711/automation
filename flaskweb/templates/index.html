@@ -1,0 +1,22 @@
+
+<head>
+
+</head>
+
+<body>
+		<table>
+				{% for test in tests %}
+				<tr> 
+						<td> {{ test.name }} </td>
+						<td> {{ test.count }} </td>
+						<td> <form> 
+								{% if test.running %}
+								<input type=submit formmethod="post" name="{{test.name}}" value='turn off'>
+								{% else %}
+								<input type=submit formmethod="post" name="{{test.name}}" value='turn on'>
+								{% endif  %}
+							</form>
+				</tr>
+				{% endfor %}
+		</table>
+</body>
