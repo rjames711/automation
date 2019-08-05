@@ -25,17 +25,8 @@ class TestObj:
         with open(self.run_file,'w') as rf:
             rf.write(newstate)
             
-        
 
-
-
-
-
-@app.route('/')
-def entry_point():
-    return 'Hello World!'
-
-@app.route('/app', methods=('GET','POST'))
+@app.route('/', methods=('GET','POST'))
 def main():
     if request.method == 'POST':
         print('got request')
